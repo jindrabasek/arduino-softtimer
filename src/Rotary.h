@@ -39,32 +39,22 @@
 class Rotary : public Task, public IPciChangeHandler
 {
   public:
-    /**
-      * Create a debouncing task with the following parameters.
-      *  pin - Checking pin for input.
-      *  pushMode - CLOSE_ON_PUSH / OPEN_ON_PUSH  - Your button are normally wired to be NO (Normally Openned), so USE CLOSE_ON_PUSH.
-      *   But sometimes it is NC (Normally Closed), in this case use OPEN_ON_PUSH.
-      *  onPressed() - A callback function pointer. This function is called when the bouncing button is really pushed. (Optional,
-      *   pass NULL, if you do not want to use this feature.)
-      *  onReleased(pressTimespan) - A callback function pointer. This function is called when the bouncing button is really
-      *   released. (Optional, pass NULL, if you do not want to use this feature.)
-      *   The callback receives the pressTimespan parameter that is the time in milliseconds the button was hold down before
-      *   it was released.
-      */
-    Rotary(int pinA, int pinB, void (*onRotation)(short direction, Rotary* rotary), bool pullUp=false);
+    Rotary(byte pinA, byte pinB, void (*onRotation)(short direction, Rotary* rotary), bool pullUp=false);
     
     /**
      * Please call this function on interrupt.
      */
     virtual void pciHandleChange(byte changedTo, PciListenerImp2* listener);
 
+  protected:
+    virtual void run();
+
   private:
-    PciListenerImp2 _listenerA = PciListenerImp2();
-    PciListenerImp2 _listenerB = PciListenerImp2();
-    volatile int _stateCW;
-    volatile int _stateCCW;
-    void (*_onRotation)(short direction, Rotary* rotary);
-    static void step(Task* me);
+    PciListenerImp2 listenerA;
+    PciListenerImp2 listenerB;
+    volatile int stateCW;
+    volatile int stateCCW;
+    void (*onRotation)(short direction, Rotary* rotary);
 };
 
 #endif

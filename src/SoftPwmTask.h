@@ -49,19 +49,25 @@ class SoftPwmTask : public Task
      */
     void off();
     
+	byte getUpperLimit() const {
+		return upperLimit;
+	}
+
+  protected:
+    virtual void run();
+
+  private:
+    int outPin;
+    byte value;
+    byte counter;
+    
+    uint8_t bitMask;
+    volatile uint8_t *portRegister;
+
     /**
      * The "always on" level of the PWM. The default is 255.
      */
     byte upperLimit;
-	  
-  private:
-    int _outPin;
-    byte _value;
-    byte _counter;
-    static void step(Task* me);
-    
-    uint8_t _bitMask;
-    volatile uint8_t *_portRegister;
 };
 
 #endif

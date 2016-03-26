@@ -27,87 +27,82 @@
 #include "BlinkTask.h"
 #include "SoftTimer.h"
 
-void BlinkTask::init(byte outPin, unsigned long onMs, unsigned long offMs, byte count, unsigned long delayMs) {
-  this->onMs = onMs;
-  this->offMs = offMs;
-  this->count = count;
-  this->delayMs = delayMs;
 
-  pinMode(outPin, OUTPUT);
-  _bitMask = digitalPinToBitMask(outPin);
-  _portRegister = portOutputRegister(digitalPinToPort(outPin));
-
-  this->onLevel = HIGH;
+BlinkTask::BlinkTask(byte outPin, unsigned long onOffUs) :
+        BlinkTask(outPin, onOffUs, onOffUs, 0, 0) {
 }
 
-BlinkTask::BlinkTask(byte outPin, unsigned long onOffMs) : Task(onOffMs, &(BlinkTask::stepState)) {
-  this->init(outPin, onOffMs, onOffMs, 0, 0);
+BlinkTask::BlinkTask(byte outPin, unsigned long onUs, unsigned long offUs) :
+        BlinkTask(outPin, onUs, offUs, 0, 0) {
 }
 
-BlinkTask::BlinkTask(byte outPin, unsigned long onMs, unsigned long offMs) : Task(onMs, &(BlinkTask::stepState)) {
-  this->init(outPin, onMs, offMs, 0, 0);
+BlinkTask::BlinkTask(byte outPin, unsigned long onUs,unsigned long offUs, byte count) :
+        BlinkTask(outPin, onUs, offUs, count, 0) {
 }
 
-BlinkTask::BlinkTask(byte outPin, unsigned long onMs,unsigned long offMs, byte count) : Task(onMs, &(BlinkTask::stepState)) {
-  this->init(outPin, onMs, offMs, count, 0);
-  this->stop();
-}
-
-BlinkTask::BlinkTask(byte outPin, unsigned long onMs, unsigned long offMs, byte count, unsigned long delayMs) : Task(onMs, &(BlinkTask::stepState)) {
-  this->init(outPin, onMs, offMs, count, delayMs);
+BlinkTask::BlinkTask(byte outPin, unsigned long onUs, unsigned long offUs, byte count, unsigned long delayUs) : Task(onUs),
+        _counter(0),
+        _state(STATE_OFF),
+        onUs(onUs),
+        offUs(offUs),
+        count(count),
+        delayUs(delayUs),
+        _bitMask(digitalPinToBitMask(outPin)),
+        _portRegister(portOutputRegister(digitalPinToPort(outPin))),
+        onLevel(HIGH) {
+   pinMode(outPin, OUTPUT);
 }
 
 void BlinkTask::start() {
   this->_state = STATE_OFF;
   this->_counter = 0;
-  this->setPeriodMs(0);
-  SoftTimer.add(this);
+  this->setPeriodUs(0);
+  SoftTimer::instance().add(this);
 }
 
 void BlinkTask::start(byte count) {
   this->count = count;
   this->start();
-  this->delayMs = 0;
+  this->delayUs = 0;
 }
 
 void BlinkTask::stop() {
-  SoftTimer.remove(this);
+  remove();
 }
 
-void BlinkTask::stepState(Task* task) {
-  BlinkTask* bt = (BlinkTask*)task;
-  if(bt->_state == STATE_ON) {
+void BlinkTask::run() {
+  if(this->_state == STATE_ON) {
     // -- Turn off.
-    if(bt->onLevel == HIGH) {
-      *bt->_portRegister &= ~bt->_bitMask;
+    if(this->onLevel == HIGH) {
+      *this->_portRegister &= ~this->_bitMask;
     } else {  
-      *bt->_portRegister |= bt->_bitMask;
+      *this->_portRegister |= this->_bitMask;
     }
-    bt->_counter += 1;
-    bt->_state = STATE_OFF;
-    bt->setPeriodMs(bt->offMs);
+    this->_counter += 1;
+    this->_state = STATE_OFF;
+    this->setPeriodUs(this->offUs);
   }
   else {
     // -- state == OFF or WAIT
     // -- Turn on.
-    if(bt->onLevel == HIGH) {
-      *bt->_portRegister |= bt->_bitMask;
+    if(this->onLevel == HIGH) {
+      *this->_portRegister |= this->_bitMask;
     } else {  
-      *bt->_portRegister &= ~bt->_bitMask;
+      *this->_portRegister &= ~this->_bitMask;
     }
-    bt->_state = STATE_ON;
-    bt->setPeriodMs(bt->onMs);
+    this->_state = STATE_ON;
+    this->setPeriodUs(this->onUs);
   }
-  if((bt->count > 0) && (bt->_counter >= bt->count)) {
+  if((this->count > 0) && (this->_counter >= this->count)) {
     // -- Count was defined, and we reached it.
-    bt->_counter = 0;
+    this->_counter = 0;
     
-    if(bt->delayMs > 0) {
+    if(this->delayUs > 0) {
       // -- delay was defined.
-      bt->_state = STATE_WAIT;
-      bt->setPeriodMs(bt->delayMs);
+      this->_state = STATE_WAIT;
+      this->setPeriodUs(this->delayUs);
     } else {
-      bt->stop();
+      this->stop();
     }
   }
 }

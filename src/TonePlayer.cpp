@@ -27,51 +27,49 @@
 #include "TonePlayer.h"
 #include "SoftTimer.h"
 
-const float trot = 1.05946309435929; // -- The twelfth root of two
-const float A440 = 440.0; // -- A440 (pitch standard)
+const float TonePlayer::trot = 1.05946309435929; // -- The twelfth root of two
+const float TonePlayer::A440 = 440.0; // -- A440 (pitch standard)
 
-TonePlayer::TonePlayer(int pin, unsigned long baseLength)  : Task(0, &(TonePlayer::step)) {
-  _outPin = pin;
-  _baseLength = baseLength;
+TonePlayer::TonePlayer(int pin, unsigned long baseLength)  :
+		Task(0), outPin(pin), baseLength(baseLength),
+		playing(false), pos(0){
 }
 
 void TonePlayer::play(String tones) {
-  this->_tones = tones;
+  this->tones = tones;
 
-  SoftTimer.remove(this);
-  this->setPeriodMs(0);
-  this->_playing = true;
-  this->_pos = 0;
-  SoftTimer.add(this);
+  remove();
+  this->setPeriodUs(0);
+  this->playing = true;
+  this->pos = 0;
+  SoftTimer::instance().add(this);
 }
 
-void TonePlayer::step(Task* task) {
-  TonePlayer* tp = (TonePlayer*)task;
-  
+void TonePlayer::run() {
   // -- play a small silence after each tone
-  if(tp->_playing) {
-    tp->_playing = false;
-    noTone(tp->_outPin);
-    tp->setPeriodMs(tp->_baseLength / 20);
+  if(this->playing) {
+    this->playing = false;
+    noTone(this->outPin);
+    this->setPeriodUs(this->baseLength / 20);
     return;
   }
 
   // -- finished
-  if(tp->_pos >= tp->_tones.length()) {
-    SoftTimer.remove(tp);
-    noTone(tp->_outPin);
+  if(this->pos >= this->tones.length()) {
+    remove();
+    noTone(this->outPin);
     return;
   }
 
   // -- calculate length
-  char cLength = tp->_tones[tp->_pos+1];
-  tp->setPeriodMs((unsigned long)(cLength-'0') * tp->_baseLength);
+  char cLength = this->tones[this->pos+1];
+  this->setPeriodUs((unsigned long)(cLength-'0') * this->baseLength);
 
   // -- calculate tone
-  char cPitch = tp->_tones[tp->_pos];
+  char cPitch = this->tones[this->pos];
   if(cPitch == '_') {
     // -- add silence
-    noTone(tp->_outPin);
+    noTone(this->outPin);
   } else {
     float val = A440;
     int tune = (int)(cPitch-'j'); // -- 'j' character means A note
@@ -91,10 +89,10 @@ void TonePlayer::step(Task* task) {
     }
 
     // -- play tone
-    tone(tp->_outPin, val);
+    tone(this->outPin, val);
   }
   
-  tp->_playing = true;
-  tp->_pos += 2;
+  this->playing = true;
+  this->pos += 2;
 }
 

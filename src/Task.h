@@ -33,44 +33,93 @@
 class Task
 {
   public:
+	virtual ~Task();
+
     /**
      * Construct a task with defining a period and a callback handler function.
-     *  periodMs - Call the task in every X milliseconds. Do not add values greater then 4,294,967, which is about 71 minutes!
+     *  periodMs - Call the task in every X milliseconds. Do not add values greater then 4,294,967,000 which is about 71 minutes!
      *  callback - Is a static function reference, the function will be called each time. The callback function need to
      * have one argument, which is the currently running task.
      */
-    Task(unsigned long periodMs, void (*callback)(Task* me));
+    Task(unsigned long periodUs, bool enabled = true);
     
     /**
-     * The timeslot in milliseconds the handler should be called.
-     * Do not add values greater then 4,294,967, which is about 71 minutes!
+     * Remove registration of a task in the timer manager.
      */
-    void setPeriodMs(unsigned long periodMs);
+    void remove();
 
-    /**
-     * The timeslot in milliseconds the handler should be called. If the value is near 1 the handler will be called in every loop.
-     */
-    unsigned long periodMicros;
-    
-    /**
-     * The last call (start) time of the task. You can reset the task by setting this value to micros().
-     */
-    volatile unsigned long lastCallTimeMicros;
-    
-    /**
-     * Start time of the task.
-     */
-    volatile unsigned long nowMicros;
-    
-    /**
-     * The function that will be called when the period time was passed since the lastCallTime. This member is for internal use only.
-     */
-    void (*callback)(Task* me);
+    virtual void setPeriodUs(unsigned long periodUs);
+
+
+
+    void startAtEarliestOportunity();
+
+    virtual void markJustCalled();
+
+	bool isEnabled() const {
+		return enabled;
+	}
+
+	void setEnabled(bool enabled) {
+		this->enabled = enabled;
+	}
+
+	unsigned long getPeriodUs() const {
+        return periodUs;
+    }
+
+	friend class SoftTimer;
+
+  protected:
+
+	virtual void testAndRun();
+
+	/**
+	 * The function that will be called when the period time was passed since the lastCallTime.
+	 */
+	virtual void run()=0;
+
+    volatile unsigned long getLastCallTimeMicros() const {
+        return lastCallTimeMicros;
+    }
+
+    void setLastCallTimeMicros(volatile unsigned long lastCallTimeMicros) {
+        this->lastCallTimeMicros = lastCallTimeMicros;
+    }
+
+    volatile bool isStartAtEarliest() const {
+        return startAtEarliest;
+    }
+
+    void setStartAtEarliest(volatile bool startAtEarliest) {
+        this->startAtEarliest = startAtEarliest;
+    }
+
+  private:
+
+	volatile bool enabled;
+
+	volatile bool startAtEarliest;
+
     /**
      * This member is for internal use only. Do not change!
      */
     Task* nextTask;
-  private:
+
+    /**
+	 * This member is for internal use only. Do not change!
+	 */
+	Task** prevToThisTask;
+
+    /**
+     * The timeslot in milliseconds the handler should be called. If the value is near 1 the handler will be called in every loop.
+     */
+    unsigned long periodUs;
+
+    /**
+     * The last call (start) time of the task. You can reset the task by setting this value to micros().
+     */
+    volatile unsigned long lastCallTimeMicros;
 };
 
 #endif

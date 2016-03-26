@@ -75,6 +75,14 @@ class Dimmer : public Task
      * Get the upper level of the pwm.
      */
     byte getUpperLimit();
+
+  protected:
+
+    virtual void run();
+
+  private:
+    SoftPwmTask* pwm;
+    float stepLevel;
    
     /**
      * Current dim level PWM value. Note that the maximum is pwm->upperLimit.
@@ -95,11 +103,6 @@ class Dimmer : public Task
      * Level-arranging steps should be performed within each full OFF->ON change. Will be applied if setFrequency() is called.
      */
     byte stepCount;
-     
-  private:
-    SoftPwmTask* _pwm;
-    float _stepLevel;
-    static void step(Task* me);
 };
 
 #endif

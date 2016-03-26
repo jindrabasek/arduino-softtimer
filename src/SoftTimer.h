@@ -29,29 +29,29 @@
 
 #include "Task.h"
 
-class SoftTimerClass
+class SoftTimer
 {
   public:
+
+	SoftTimer(const SoftTimer& that) = delete;
+	void operator=(const SoftTimer& that) = delete;
+	static SoftTimer& instance();
   
     /**
      * Register a task in the timer manager.
      */
     void add(Task* task);
-    
-    /**
-    * Remove registration of a task in the timer manager.
-    */
-    void remove(Task* task);
-    
+
     /**
      * For internal use only. You do not need to call this function.
      */
     void run();
   private:
-    void testAndCall(Task* task);
-    Task* _tasks;
-};
+    SoftTimer();
 
-extern SoftTimerClass SoftTimer;
+    void testAndCall(Task* task);
+    Task* tasks;
+    Task* lastTask;
+};
 
 #endif

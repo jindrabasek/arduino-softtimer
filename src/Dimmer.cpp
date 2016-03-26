@@ -27,12 +27,12 @@
 #include "SoftTimer.h"
 #include "Dimmer.h"
 
-Dimmer::Dimmer(SoftPwmTask* pwm, int frequencyMs) : Task(10, &(Dimmer::step))
+Dimmer::Dimmer(SoftPwmTask* pwm, int frequencyMs) : Task(10)
 {
-  this->_pwm = pwm;
+  this->pwm = pwm;
   this->direction = DIMMER_DIRECTION_HIGH;
   this->value = 0;
-  this->_pwm->analogWrite((byte)this->value);
+  this->pwm->analogWrite((byte)this->value);
   this->stepCount = DEFAULT_STEP_COUNT;
 
   this->setFrequency(frequencyMs);
@@ -41,57 +41,56 @@ Dimmer::Dimmer(SoftPwmTask* pwm, int frequencyMs) : Task(10, &(Dimmer::step))
 
 void Dimmer::startPulsate() {
   this->stopOnLimit = false;
-  SoftTimer.add(this->_pwm);
-  SoftTimer.add(this);
+  SoftTimer::instance().add(this->pwm);
+  SoftTimer::instance().add(this);
 }
 
 void Dimmer::hold() {
-  SoftTimer.remove(this);
+  remove();
 }
 
 void Dimmer::off() {
   this->hold();
-  this->_pwm->off();
-  SoftTimer.remove(this);
-  SoftTimer.remove(this->_pwm);
+  this->pwm->off();
+  remove();
+  this->pwm->remove();
 }
 
-void Dimmer::revertDirection() {
+inline void Dimmer::revertDirection() {
   this->direction *= -1;
 }
 
 void Dimmer::setFrequency(int frequencyMs) {
-  this->_stepLevel = (float)this->_pwm->upperLimit / (float)this->stepCount;
-  this->periodMicros = (float)frequencyMs * 500.0 / (float)this->stepCount;
+  this->stepLevel = (float)this->pwm->getUpperLimit() / (float)this->stepCount;
+  setPeriodUs((float)frequencyMs * 500.0 / (float)this->stepCount);
   
 }
 
-byte Dimmer::getUpperLimit() {
-  return this->_pwm->upperLimit;
+inline byte Dimmer::getUpperLimit() {
+  return this->pwm->getUpperLimit();
 }
 
 
-void Dimmer::step(Task* task)
+void Dimmer::run()
 {
-  Dimmer* dimmer = (Dimmer*)task;
   
   boolean isOnLimit = false;
   
-  dimmer->value += dimmer->direction * dimmer->_stepLevel;
-  if((dimmer->direction < 0) && (dimmer->value < 0)) {
-    dimmer->value = 0;
-    dimmer->direction *= -1; // -- next time go in the other direction
+  this->value += this->direction * this->stepLevel;
+  if((this->direction < 0) && (this->value < 0)) {
+    this->value = 0;
+    this->direction *= -1; // -- next time go in the other direction
     isOnLimit = true;
-  } else if((dimmer->direction > 0) && (dimmer->value > dimmer->_pwm->upperLimit)) {
-    dimmer->value = dimmer->_pwm->upperLimit;
-    dimmer->direction *= -1; // -- next time go in the other direction
+  } else if((this->direction > 0) && (this->value > this->pwm->getUpperLimit())) {
+    this->value = this->pwm->getUpperLimit();
+    this->direction *= -1; // -- next time go in the other direction
     isOnLimit = true;
   }
   
-  dimmer->_pwm->analogWrite((byte)dimmer->value);
+  this->pwm->analogWrite((byte)this->value);
   
-  if(isOnLimit && dimmer->stopOnLimit) {
-    SoftTimer.remove(dimmer);
+  if(isOnLimit && this->stopOnLimit) {
+    remove();
   }
 
 }

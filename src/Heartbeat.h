@@ -39,7 +39,6 @@ class Heartbeat : public BlinkTask
      */
     Heartbeat(byte outPin);
 
-  private:
 };
 
 #endif

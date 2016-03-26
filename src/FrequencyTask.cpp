@@ -27,32 +27,29 @@
 #include "SoftTimer.h"
 #include "FrequencyTask.h"
 
-FrequencyTask::FrequencyTask(int outPin, float freq) : Task(0, &(FrequencyTask::step))
+FrequencyTask::FrequencyTask(int outPin, float freq) : Task(0),
+    stateOn(false),
+    bitMask(digitalPinToBitMask(outPin)),
+    portRegister(portOutputRegister(digitalPinToPort(outPin)))
 {
   pinMode(outPin, OUTPUT);
-  
-  _bitMask = digitalPinToBitMask(outPin);
-  _portRegister = portOutputRegister(digitalPinToPort(outPin));
-  
   this->setFrequency(freq);
 }
 
 
 void FrequencyTask::setFrequency(float freq) {
-  this->periodMicros = 500000.0 / freq;
+  setPeriodUs(500000.0 / freq);
 }
 
-void FrequencyTask::step(Task* task)
+void FrequencyTask::run()
 {
-  FrequencyTask* ft = (FrequencyTask*)task;
-  
   // -- Invert state.
-  if(ft->_stateOn) {
-      *ft->_portRegister &= ~ft->_bitMask;
+  if(this->stateOn) {
+      *this->portRegister &= ~this->bitMask;
   } else {
-      *ft->_portRegister |= ft->_bitMask;
+      *this->portRegister |= this->bitMask;
   }
   
-  ft->_stateOn = !ft->_stateOn;
+  this->stateOn = !this->stateOn;
 }
 

@@ -33,7 +33,6 @@
 class TonePlayer : Task
 {
   public:
-
     /**
       * Initialize the player.
       *  pin - Speaker pin.
@@ -58,13 +57,19 @@ class TonePlayer : Task
       *   "c2e2g4" - Means C-note for 2 time-span, D-note for 2 time-span, E-note for 4 time-span.
       */
     void play(String tones);
+
+  protected:
+
+    virtual void run();
   private:
-    int _outPin;
-    unsigned long _baseLength;
-    String _tones;
-    int _pos;
-    bool _playing;
-    static void step(Task* me);
+    static const float trot; // -- The twelfth root of two
+    static const float A440; // -- A440 (pitch standard)
+
+    int outPin;
+    unsigned long baseLength;
+    String tones;
+    unsigned int pos;
+    bool playing;
 };
 
 #endif

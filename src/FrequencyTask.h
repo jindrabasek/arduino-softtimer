@@ -47,11 +47,13 @@ class FrequencyTask : public Task
      */
     void setFrequency(float freq);
     
+  protected:
+    virtual void run();
+
   private:
-    boolean _stateOn;
-    uint8_t _bitMask;
-    volatile uint8_t *_portRegister;
-    static void step(Task* me);
+    boolean stateOn;
+    uint8_t bitMask;
+    volatile uint8_t *portRegister;
 };
 
 #endif

@@ -18,10 +18,10 @@ void setup(void)
 {
   // -- Register the PWM.
   pwm.analogWrite(value);
-  SoftTimer.add(&pwm);
+  SoftTimer::instance().add(&pwm);
   
   // -- Register the increment task.
-  SoftTimer.add(&incrementTask);
+  SoftTimer::instance().add(&incrementTask);
 }
 
 void increment(Task* me) {
@@ -29,8 +29,8 @@ void increment(Task* me) {
   value += 16;
   if(value == 0) {
     // -- Byte value overflows: 240 + 16 = 0
-    SoftTimer.remove(&incrementTask);
-    SoftTimer.add(&decrementTask);
+    SoftTimer::instance().remove(&incrementTask);
+    SoftTimer::instance().add(&decrementTask);
   }
 }
 
@@ -40,8 +40,8 @@ void decrement(Task* me) {
   pwm.analogWrite(value);
   if(value == 0) {
     // -- Floor reached.
-    SoftTimer.remove(&decrementTask);
-    SoftTimer.add(&incrementTask);
+    SoftTimer::instance().remove(&decrementTask);
+    SoftTimer::instance().add(&incrementTask);
   }
 }
 

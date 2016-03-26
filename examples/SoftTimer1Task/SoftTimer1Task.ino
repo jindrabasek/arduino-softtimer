@@ -5,8 +5,8 @@ Task t2(1111, callBack2);
 
 void setup() {
   pinMode(13, OUTPUT);
-  SoftTimer.add(&t1);
-  SoftTimer.add(&t2);
+  SoftTimer::instance().add(&t1);
+  SoftTimer::instance().add(&t2);
 }
 
 void callBack1(Task* me) {

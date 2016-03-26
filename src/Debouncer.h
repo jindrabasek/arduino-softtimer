@@ -7,22 +7,22 @@
  * Contact: prampec+arduino@gmail.com
  * Copyright: 2012 Balazs Kelemen
  * Copying permission statement:
-    This file is part of SoftTimer.
+ This file is part of SoftTimer.
 
-    SoftTimer is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ SoftTimer is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 #ifndef DEBOUNDER_H
 #define DEBOUNDER_H
@@ -32,6 +32,7 @@
 #include <PciListener.h>
 //#include "../PciManager/PciListener.h"
 #include <Arduino.h>
+#include <ButtonHandler.h>
 
 #define MODE_OPEN_ON_PUSH HIGH
 #define MODE_CLOSE_ON_PUSH LOW
@@ -42,43 +43,47 @@
 #define STATE_ONOFF_BOUNCING 3
 
 /** We say that 50 milliseconds are enough for the signal to stabilize. */
-#define DEFAULT_DEBOUNCE_DELAY_MICROS 50000
+#define DEFAULT_DEBOUNCE_DELAY_MILIS 50
 
-class Debouncer : public PciListener, public Task
-{
-  public:
-    /**
-      * Create a debouncing task with the following parameters.
-      *  pin - Checking pin for input.
-      *  pushMode - CLOSE_ON_PUSH / OPEN_ON_PUSH  - Your button are normally wired to be NO (Normally Openned), so USE CLOSE_ON_PUSH.
-      *   But sometimes it is NC (Normally Closed), in this case use OPEN_ON_PUSH.
-      *  onPressed() - A callback function pointer. This function is called when the bouncing button is really pushed. (Optional,
-      *   pass NULL, if you do not want to use this feature.)
-      *  onReleased(pressTimespan) - A callback function pointer. This function is called when the bouncing button is really
-      *   released. (Optional, pass NULL, if you do not want to use this feature.)
-      *   The callback receives the pressTimespan parameter that is the time in milliseconds the button was hold down before
-      *   it was released.
-      */
-    Debouncer(int pin, int pushMode, void (*onPressed)(), void (*onReleased)(unsigned long pressTimespan), bool pullUp=false);
-    
-    /**
-     * Please call this function on interrupt.
-     */
-    virtual void pciHandleInterrupt(byte vect);
+class Debouncer: public PciListener, public Task {
+public:
+	/**
+	 * Create a debouncing task with the following parameters.
+	 *  pin - Checking pin for input.
+	 *  pushMode - CLOSE_ON_PUSH / OPEN_ON_PUSH  - Your button are normally wired to be NO (Normally Openned), so USE CLOSE_ON_PUSH.
+	 *   But sometimes it is NC (Normally Closed), in this case use OPEN_ON_PUSH.
+	 *  onPressed() - A callback function pointer. This function is called when the bouncing button is really pushed. (Optional,
+	 *   pass NULL, if you do not want to use this feature.)
+	 *  onReleased(pressTimespan) - A callback function pointer. This function is called when the bouncing button is really
+	 *   released. (Optional, pass NULL, if you do not want to use this feature.)
+	 *   The callback receives the pressTimespan parameter that is the time in milliseconds the button was hold down before
+	 *   it was released.
+	 */
+	Debouncer(byte pin, byte pushMode, ButtonHandler * handler,
+			bool pullUp = false);
 
-    /**
-     * Change the delay of the bouncing time-span. The default value is DEFAULT_DEBOUNCE_DELAY_MILLIS;
-     */
-    unsigned long debounceDelayMicros = DEFAULT_DEBOUNCE_DELAY_MICROS;
-    boolean setDebounceDelayMs(unsigned long debounceDelayMs) { this->debounceDelayMicros = debounceDelayMs * 1000; return true; };
-  private:
-    int _pin;
-    int _onLevel;
-    volatile int _state; // 0=off, 1=bouncing, 2=pressing
-    unsigned long _pressStart;
-    void (*_onPressed)();
-    void (*_onReleased)(unsigned long pressTimespan);
-    static void step(Task* me);
+	/**
+	 * Please call this function on interrupt.
+	 */
+	virtual void pciHandleInterrupt(byte vect);
+
+	void setHandler(ButtonHandler * handler) {
+		this->handler = handler;
+	}
+
+	ButtonHandler * getHandler() {
+		return handler;
+	}
+
+protected:
+
+    virtual void run();
+
+private:
+	byte onLevel;
+	volatile byte state; // 0=off, 1=bouncing, 2=pressing
+	unsigned long pressStart;
+	ButtonHandler * volatile handler;
 };
 
 #endif
