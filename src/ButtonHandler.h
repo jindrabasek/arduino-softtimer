@@ -10,13 +10,13 @@
 
 class ButtonHandler {
 public:
-	ButtonHandler();
-	virtual ~ButtonHandler();
+    ButtonHandler();
+    virtual ~ButtonHandler();
 
-	virtual void onPressed();
-	virtual void onReleased(unsigned long pressTimespan);
+    virtual void onPressed();
+    virtual void onReleased(unsigned long pressTimespan);
 
-	static ButtonHandler & voidButtonHandler();
+    static ButtonHandler & voidButtonHandler();
 };
 
 #endif /* LIBRARIES_SOFTTIMER_SRC_BUTTONHANDLER_H_ */

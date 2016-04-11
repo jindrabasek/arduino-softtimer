@@ -33,55 +33,56 @@
 #define EVENT_OCCURRED 1
 #define EVENT_CLEARED  2
 
-Rotary::Rotary(byte pinA, byte pinB, void (*onRotation)(short direction, Rotary* rotary), bool pullUp) :
-		Task(0, false),
-		listenerA(pinA, this, pullUp),
-		listenerB(pinB, this, pullUp),
-		stateCW(EVENT_NOTIFIED),
-		stateCCW(EVENT_NOTIFIED),
-		onRotation(onRotation){
+Rotary::Rotary(byte pinA, byte pinB,
+               void (*onRotation)(short direction, Rotary* rotary), bool pullUp) :
+        Task(0, false),
+        listenerA(pinA, this, pullUp),
+        listenerB(pinB, this, pullUp),
+        stateCW(EVENT_NOTIFIED),
+        stateCCW(EVENT_NOTIFIED),
+        onRotation(onRotation) {
 
-	PciManager::instance().registerListener(&this->listenerA);
-	PciManager::instance().registerListener(&this->listenerB);
+    PciManager::instance().registerListener(&this->listenerA);
+    PciManager::instance().registerListener(&this->listenerB);
 
-	SoftTimer::instance().add(this);
+    SoftTimer::instance().add(this);
 }
 
 void Rotary::pciHandleChange(byte changedTo, PciListenerImp2* listener) {
-	if (listener == &this->listenerB) {
-		// -- pinB changes
-		if ((changedTo == HIGH) && (this->listenerA.lastVal == LOW)) {
-			if (this->stateCW == EVENT_CLEARED) {
-				this->stateCW = EVENT_OCCURRED;
-				this->setEnabled(true);
-			}
-		} else if ((changedTo == LOW) && (this->listenerA.lastVal == HIGH)) {
-			this->stateCW = EVENT_CLEARED;
-		}
-	}
-	if (listener == &this->listenerA) {
-		// -- pinA changes
-		if ((changedTo == HIGH) && (this->listenerB.lastVal == LOW)) {
-			if (this->stateCCW == EVENT_CLEARED) {
-				this->stateCCW = EVENT_OCCURRED;
-				this->setEnabled(true);
-			}
-		} else if ((changedTo == LOW) && (this->listenerB.lastVal == HIGH)) {
-			this->stateCCW = EVENT_CLEARED;
-		}
-	}
+    if (listener == &this->listenerB) {
+        // -- pinB changes
+        if ((changedTo == HIGH) && (this->listenerA.lastVal == LOW)) {
+            if (this->stateCW == EVENT_CLEARED) {
+                this->stateCW = EVENT_OCCURRED;
+                this->setEnabled(true);
+            }
+        } else if ((changedTo == LOW) && (this->listenerA.lastVal == HIGH)) {
+            this->stateCW = EVENT_CLEARED;
+        }
+    }
+    if (listener == &this->listenerA) {
+        // -- pinA changes
+        if ((changedTo == HIGH) && (this->listenerB.lastVal == LOW)) {
+            if (this->stateCCW == EVENT_CLEARED) {
+                this->stateCCW = EVENT_OCCURRED;
+                this->setEnabled(true);
+            }
+        } else if ((changedTo == LOW) && (this->listenerB.lastVal == HIGH)) {
+            this->stateCCW = EVENT_CLEARED;
+        }
+    }
 }
 
 void Rotary::run() {
 
-	if (this->stateCW == EVENT_OCCURRED) {
-		this->onRotation(DIRECTION_CW, this);
-		this->stateCW = EVENT_NOTIFIED;
-	}
-	if (this->stateCCW == EVENT_OCCURRED) {
-		this->onRotation(DIRECTION_CCW, this);
-		this->stateCCW = EVENT_NOTIFIED;
-	}
-	this->setEnabled(false);
+    if (this->stateCW == EVENT_OCCURRED) {
+        this->onRotation(DIRECTION_CW, this);
+        this->stateCW = EVENT_NOTIFIED;
+    }
+    if (this->stateCCW == EVENT_OCCURRED) {
+        this->onRotation(DIRECTION_CCW, this);
+        this->stateCCW = EVENT_NOTIFIED;
+    }
+    this->setEnabled(false);
 }
 

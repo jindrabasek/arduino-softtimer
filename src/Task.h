@@ -7,22 +7,22 @@
  * Contact: prampec+arduino@gmail.com
  * Copyright: 2012 Balazs Kelemen
  * Copying permission statement:
-    This file is part of SoftTimer.
+ This file is part of SoftTimer.
 
-    SoftTimer is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ SoftTimer is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 #ifndef TASK_H
 #define TASK_H
@@ -30,10 +30,9 @@
 /**
  * Task is a job that should be called repeatedly,
  */
-class Task
-{
-  public:
-	virtual ~Task();
+class Task {
+public:
+    virtual ~Task();
 
     /**
      * Construct a task with defining a period and a callback handler function.
@@ -42,7 +41,7 @@ class Task
      * have one argument, which is the currently running task.
      */
     Task(unsigned long periodUs, bool enabled = true);
-    
+
     /**
      * Remove registration of a task in the timer manager.
      */
@@ -50,34 +49,32 @@ class Task
 
     virtual void setPeriodUs(unsigned long periodUs);
 
-
-
     void startAtEarliestOportunity();
 
     virtual void markJustCalled();
 
-	bool isEnabled() const {
-		return enabled;
-	}
+    bool isEnabled() const {
+        return enabled;
+    }
 
-	void setEnabled(bool enabled) {
-		this->enabled = enabled;
-	}
+    void setEnabled(bool enabled) {
+        this->enabled = enabled;
+    }
 
-	unsigned long getPeriodUs() const {
+    unsigned long getPeriodUs() const {
         return periodUs;
     }
 
-	friend class SoftTimer;
+    friend class SoftTimer;
 
-  protected:
+protected:
 
-	virtual void testAndRun();
+    virtual void testAndRun();
 
-	/**
-	 * The function that will be called when the period time was passed since the lastCallTime.
-	 */
-	virtual void run()=0;
+    /**
+     * The function that will be called when the period time was passed since the lastCallTime.
+     */
+    virtual void run()=0;
 
     volatile unsigned long getLastCallTimeMicros() const {
         return lastCallTimeMicros;
@@ -95,21 +92,7 @@ class Task
         this->startAtEarliest = startAtEarliest;
     }
 
-  private:
-
-	volatile bool enabled;
-
-	volatile bool startAtEarliest;
-
-    /**
-     * This member is for internal use only. Do not change!
-     */
-    Task* nextTask;
-
-    /**
-	 * This member is for internal use only. Do not change!
-	 */
-	Task** prevToThisTask;
+private:
 
     /**
      * The timeslot in milliseconds the handler should be called. If the value is near 1 the handler will be called in every loop.
@@ -120,6 +103,21 @@ class Task
      * The last call (start) time of the task. You can reset the task by setting this value to micros().
      */
     volatile unsigned long lastCallTimeMicros;
+
+    /**
+     * This member is for internal use only. Do not change!
+     */
+    Task* nextTask;
+
+    /**
+     * This member is for internal use only. Do not change!
+     */
+    Task** prevToThisTask;
+
+    volatile bool enabled;
+
+    volatile bool startAtEarliest;
+
 };
 
 #endif

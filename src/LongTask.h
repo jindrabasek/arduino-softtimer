@@ -10,31 +10,32 @@
 
 #include "Task.h"
 
-class LongTask: public Task {
+class LongTask : public Task {
 public:
 
-	LongTask(unsigned long periodHours, unsigned long periodUs, bool enabled = true);
+    LongTask(unsigned long periodHours, unsigned long periodUs,
+             bool enabled = true);
 
-	virtual void markJustCalled();
+    virtual void markJustCalled();
 
-	virtual void setPeriodUs(unsigned long periodUs);
+    virtual void setPeriodUs(unsigned long periodUs);
 
-	virtual void setPeriod(unsigned long periodHours, unsigned long periodUs);
+    virtual void setPeriod(unsigned long periodHours, unsigned long periodUs);
 
 protected:
 
-	virtual void testAndRun();
+    virtual void testAndRun();
 
 private:
-	static unsigned long roundPeriodUs(unsigned long periodUs);
+    static unsigned long roundPeriodUs(unsigned long periodUs);
 
-	static const unsigned long ONE_HOUR_US = 3600000000;
+    static const unsigned long ONE_HOUR_US = 3600000000;
 
-	bool inLastPeriod;
+    bool inLastPeriod;
 
-	unsigned long periodHours;
-	unsigned long endPeriodUs;
-	volatile unsigned long hoursPassed;
+    unsigned long periodHours;
+    unsigned long endPeriodUs;
+    volatile unsigned long hoursPassed;
 
 };
 

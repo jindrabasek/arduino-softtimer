@@ -27,31 +27,29 @@
 #ifndef DELAYRUN_H
 #define DELAYRUN_H
 
-#include <SoftTimer.h>
 #include <Task.h>
-#include <Arduino.h>
 
 /**
  * Run a callback after a specified delay. The task will stop when finished. Also chains tasks.
  */
-class DelayRun: public Task {
+class DelayRun : public Task {
 public:
-	/**
-	 * Setup a delayed task.
-	 *  delayMs - The callback will be launched after this amount of milliseconds was passed.
-	 *    A value zero (0) may also have sense, when you only want to chain tasks.
-	 *    Do not add values greater then 4,294,967, which is about 71 minutes!
-	 *  followedBy - If the followedBy was specified, than it will be started when this was finished.
-	 *   Starting the followedBy can be denied by returning FALSE in the callback.
-	 */
-	DelayRun(unsigned long delayMs, Task* followedBy);
+    /**
+     * Setup a delayed task.
+     *  delayMs - The callback will be launched after this amount of milliseconds was passed.
+     *    A value zero (0) may also have sense, when you only want to chain tasks.
+     *    Do not add values greater then 4,294,967, which is about 71 minutes!
+     *  followedBy - If the followedBy was specified, than it will be started when this was finished.
+     *   Starting the followedBy can be denied by returning FALSE in the callback.
+     */
+    DelayRun(unsigned long delayMs, Task* followedBy);
 
 protected:
-	virtual void run();
+    virtual void run();
 
 private:
-	/** The task should be started after this one was finished. */
-	Task* followedBy;
+    /** The task should be started after this one was finished. */
+    Task* followedBy;
 };
 
 #endif

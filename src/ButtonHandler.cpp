@@ -20,6 +20,6 @@ inline void ButtonHandler::onReleased(unsigned long pressTimespan) {
 }
 
 ButtonHandler& ButtonHandler::voidButtonHandler() {
-	static ButtonHandler voidButtonHandler;
-	return voidButtonHandler;
+    static ButtonHandler voidButtonHandler;
+    return voidButtonHandler;
 }

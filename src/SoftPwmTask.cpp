@@ -28,34 +28,38 @@
 #include "SoftPwmTask.h"
 
 SoftPwmTask::SoftPwmTask(int pin) :
-		Task(30), outPin(pin), value(0), counter(0), upperLimit(255),
-		bitMask(digitalPinToBitMask(pin)), portRegister(
-				portOutputRegister(digitalPinToPort(pin))) {
-	pinMode(outPin, OUTPUT);
+        Task(30),
+        outPin(pin),
+        value(0),
+        counter(0),
+        upperLimit(255),
+        bitMask(digitalPinToBitMask(pin)),
+        portRegister(portOutputRegister(digitalPinToPort(pin))) {
+    pinMode(outPin, OUTPUT);
 }
 
 void SoftPwmTask::analogWrite(byte value) {
-	this->value = value;
+    this->value = value;
 }
 
 void SoftPwmTask::off() {
-	*this->portRegister &= ~this->bitMask;
+    *this->portRegister &= ~this->bitMask;
 }
 
 void SoftPwmTask::run() {
-	if (this->counter == this->upperLimit) {
-		// -- Reached the upper limit.
-		if (this->value != 0) {
-			// -- Set to HIGH.
-			*this->portRegister |= this->bitMask;
-		}
-		this->counter = 0;
-	} else {
-		if (this->counter >= this->value) {
-			// -- Reached the value level.
-			// -- Set to LOW.
-			*this->portRegister &= ~this->bitMask;
-		}
-		this->counter++;
-	}
+    if (this->counter == this->upperLimit) {
+        // -- Reached the upper limit.
+        if (this->value != 0) {
+            // -- Set to HIGH.
+            *this->portRegister |= this->bitMask;
+        }
+        this->counter = 0;
+    } else {
+        if (this->counter >= this->value) {
+            // -- Reached the value level.
+            // -- Set to LOW.
+            *this->portRegister &= ~this->bitMask;
+        }
+        this->counter++;
+    }
 }

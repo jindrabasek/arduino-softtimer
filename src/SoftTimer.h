@@ -7,36 +7,35 @@
  * Contact: prampec+arduino@gmail.com
  * Copyright: 2012 Balazs Kelemen
  * Copying permission statement:
-    This file is part of SoftTimer.
+ This file is part of SoftTimer.
 
-    SoftTimer is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ SoftTimer is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 #ifndef SOFTTIMER_H
 #define SOFTTIMER_H
 
 #include "Task.h"
 
-class SoftTimer
-{
-  public:
+class SoftTimer {
+public:
 
-	SoftTimer(const SoftTimer& that) = delete;
-	void operator=(const SoftTimer& that) = delete;
-	static SoftTimer& instance();
-  
+    SoftTimer(const SoftTimer& that) = delete;
+    void operator=(const SoftTimer& that) = delete;
+    static SoftTimer& instance();
+
     /**
      * Register a task in the timer manager.
      */
@@ -46,7 +45,7 @@ class SoftTimer
      * For internal use only. You do not need to call this function.
      */
     void run();
-  private:
+private:
     SoftTimer();
 
     void testAndCall(Task* task);

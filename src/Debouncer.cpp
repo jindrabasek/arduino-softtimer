@@ -32,73 +32,76 @@
 
 Debouncer::Debouncer(byte pin, byte pushMode, ButtonHandler * handler,
 bool pullUp) :
-		PciListener(pin), Task(DEFAULT_DEBOUNCE_DELAY_MILIS, false), onLevel(
-				pushMode), pressStart(0), handler(handler) {
-	if (pullUp) {
-		pinMode(pin, INPUT_PULLUP);
-	} else {
-		pinMode(pin, INPUT);
-	}
-	this->state =
-			digitalRead(this->pciPin) == this->onLevel ? STATE_ON : STATE_OFF;
+        PciListener(pin),
+        Task(DEFAULT_DEBOUNCE_DELAY_MILIS, false),
+        onLevel(pushMode),
+        pressStart(0),
+        handler(handler) {
+    if (pullUp) {
+        pinMode(pin, INPUT_PULLUP);
+    } else {
+        pinMode(pin, INPUT);
+    }
+    this->state =
+            digitalRead(this->pciPin) == this->onLevel ? STATE_ON : STATE_OFF;
 
-	SoftTimer::instance().add(this);
+    SoftTimer::instance().add(this);
 }
 
 void Debouncer::pciHandleInterrupt(byte vect) {
-	if ((this->state == STATE_OFF) || (this->state == STATE_ON)) {
-		int oppositeLevel =
-				this->state == STATE_OFF ? this->onLevel : !this->onLevel;
-		// -- Test pin level, probably more pins are used by this interrupt.
-		volatile int val = digitalRead(this->pciPin);
-		if (val == oppositeLevel) {
-			if (this->state == STATE_OFF) {
-				this->pressStart = millis(); // -- Save the first time to the start of this task.
-			}
-			// -- After pin change we have the opposite level, lets start the bouncing timespan.
-			this->state += 1;
-			markJustCalled();
-			setEnabled(true);
-		}
-	}
+    if ((this->state == STATE_OFF) || (this->state == STATE_ON)) {
+        int oppositeLevel =
+                this->state == STATE_OFF ? this->onLevel : !this->onLevel;
+        // -- Test pin level, probably more pins are used by this interrupt.
+        volatile int val = digitalRead(this->pciPin);
+        if (val == oppositeLevel) {
+            if (this->state == STATE_OFF) {
+                this->pressStart = millis(); // -- Save the first time to the start of this task.
+            }
+            // -- After pin change we have the opposite level, lets start the bouncing timespan.
+            this->state += 1;
+            markJustCalled();
+            setEnabled(true);
+        }
+    }
 }
 
 void Debouncer::run() {
-	if ((this->state == STATE_OFF) || (this->state == STATE_ON)) {
-		setEnabled(false);
-		return;
-	}
-	int val = digitalRead(this->pciPin);
-	this->setEnabled(false);
-	;
-	if (this->state == STATE_OFFON_BOUNCING) {
-		if (val == this->onLevel) {
+    if ((this->state == STATE_OFF) || (this->state == STATE_ON)) {
+        setEnabled(false);
+        return;
+    }
+    int val = digitalRead(this->pciPin);
+    this->setEnabled(false);
+    ;
+    if (this->state == STATE_OFFON_BOUNCING) {
+        if (val == this->onLevel) {
 
-			// -- Still pressing.
-			this->state = STATE_ON;
+            // -- Still pressing.
+            this->state = STATE_ON;
 
-			// -- Call the callback.
-			this->handler->onPressed();
+            // -- Call the callback.
+            this->handler->onPressed();
 
-		} else {
+        } else {
 
-			// -- Released while bouncing.
-			this->state = STATE_OFF;
-		}
-	} else if (this->state == STATE_ONOFF_BOUNCING) {
-		if (val == !this->onLevel) {
+            // -- Released while bouncing.
+            this->state = STATE_OFF;
+        }
+    } else if (this->state == STATE_ONOFF_BOUNCING) {
+        if (val == !this->onLevel) {
 
-			// -- Really released.
-			this->state = STATE_OFF;
+            // -- Really released.
+            this->state = STATE_OFF;
 
-			volatile unsigned long pressTimespan = millis() - this->pressStart; // -- If millis() overflows this calculation will be still good.
-			this->handler->onReleased(pressTimespan);
+            volatile unsigned long pressTimespan = millis() - this->pressStart; // -- If millis() overflows this calculation will be still good.
+            this->handler->onReleased(pressTimespan);
 
-		} else {
+        } else {
 
-			// -- Repressed while bouncing.
-			this->state = STATE_ON;
-		}
-	}
-	return;
+            // -- Repressed while bouncing.
+            this->state = STATE_ON;
+        }
+    }
+    return;
 }

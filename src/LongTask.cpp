@@ -9,7 +9,7 @@
 #include <Arduino.h>
 
 LongTask::LongTask(unsigned long periodHours, unsigned long periodUs,
-        bool enabled) :
+                   bool enabled) :
         Task(periodHours == 0 ? roundPeriodUs(periodUs) : ONE_HOUR_US, enabled),
         inLastPeriod(periodHours == 0),
         periodHours(periodHours),
@@ -49,9 +49,11 @@ void LongTask::testAndRun() {
         unsigned long now = micros();
         unsigned long calc = getLastCallTimeMicros() + getPeriodUs();
         if (((now >= calc) && (calc >= getLastCallTimeMicros() // -- Nothing was overflown.
-                || getLastCallTimeMicros() > now // -- Both timer and interval-end overflows
-                )) || (now < getLastCallTimeMicros() && getLastCallTimeMicros() <= calc)) // -- timer overflows, but interval-end does not
-        {
+        || getLastCallTimeMicros() > now // -- Both timer and interval-end overflows
+        ))
+                || (now < getLastCallTimeMicros()
+                        && getLastCallTimeMicros() <= calc)) // -- timer overflows, but interval-end does not
+                {
             setLastCallTimeMicros(now);
             if (periodHours == 0 || hoursPassed >= periodHours) {
                 if (inLastPeriod) {
@@ -60,7 +62,8 @@ void LongTask::testAndRun() {
                 } else {
                     inLastPeriod = true;
                     if (endPeriodUs > 0) {
-                        Task::setPeriodUs(periodHours == 0 ? endPeriodUs : ONE_HOUR_US);
+                        Task::setPeriodUs(
+                                periodHours == 0 ? endPeriodUs : ONE_HOUR_US);
                     }
                 }
             } else {

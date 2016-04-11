@@ -28,46 +28,51 @@
 #include "Task.h"
 
 Task::Task(unsigned long periodUs, bool enabled) :
-		periodUs(periodUs), lastCallTimeMicros(0), nextTask(NULL), prevToThisTask(
-				NULL), enabled(enabled) {
+        periodUs(periodUs),
+        lastCallTimeMicros(0),
+        nextTask(NULL),
+        prevToThisTask(
+        NULL),
+        enabled(enabled),
+        startAtEarliest(false) {
 }
 
 void Task::startAtEarliestOportunity() {
-	this->startAtEarliest = true;
+    this->startAtEarliest = true;
 }
 
 void Task::markJustCalled() {
-	this->lastCallTimeMicros = micros();
+    this->lastCallTimeMicros = micros();
 }
 
 void Task::setPeriodUs(unsigned long periodUs) {
-	this->periodUs = periodUs;
+    this->periodUs = periodUs;
 }
 
 void Task::remove() {
-	if (prevToThisTask != NULL) {
-		*prevToThisTask = nextTask;
-		prevToThisTask = NULL;
-		nextTask = NULL;
-	}
+    if (prevToThisTask != NULL) {
+        *prevToThisTask = nextTask;
+        prevToThisTask = NULL;
+        nextTask = NULL;
+    }
 }
 
 /**
  * Test a task and call the callback if its period was passed since last call.
  */
 void Task::testAndRun() {
-	unsigned long now = micros();
-	unsigned long calc = lastCallTimeMicros + periodUs;
-	if (startAtEarliest || ((now >= calc) && (calc >= lastCallTimeMicros // -- Nothing was overflown.
-		|| lastCallTimeMicros > now // -- Both timer and interval-end overflows
-		)) || (now < lastCallTimeMicros && lastCallTimeMicros <= calc)) // -- timer overflows, but interval-end does not
-	{
-		startAtEarliest = false;
-		markJustCalled();
-		run();
-	}
+    unsigned long now = micros();
+    unsigned long calc = lastCallTimeMicros + periodUs;
+    if (startAtEarliest || ((now >= calc) && (calc >= lastCallTimeMicros // -- Nothing was overflown.
+            || lastCallTimeMicros > now // -- Both timer and interval-end overflows
+            )) || (now < lastCallTimeMicros && lastCallTimeMicros <= calc)) // -- timer overflows, but interval-end does not
+            {
+        startAtEarliest = false;
+        markJustCalled();
+        run();
+    }
 }
 
 Task::~Task() {
-	remove();
+    remove();
 }

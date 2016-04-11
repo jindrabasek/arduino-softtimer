@@ -7,22 +7,22 @@
  * Contact: prampec+arduino@gmail.com
  * Copyright: 2012 Balazs Kelemen
  * Copying permission statement:
-    This file is part of SoftTimer.
+ This file is part of SoftTimer.
 
-    SoftTimer is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ SoftTimer is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 #ifndef FREQUENCYTASK_H
 #define FREQUENCYTASK_H
@@ -31,9 +31,8 @@
 #include "DelayRun.h"
 #include "Arduino.h"
 
-class FrequencyTask : public Task
-{
-  public:
+class FrequencyTask : public Task {
+public:
     /**
      * Initialize a frequency genearator on the pin with the given inital frequency value.
      * Note, that you have to register the task to the timer managare to let it run.
@@ -41,16 +40,16 @@ class FrequencyTask : public Task
      *  freq - Initial frequency.
      */
     FrequencyTask(int outPin, float freq);
-   
+
     /**
      * Adjust the frequency.
      */
     void setFrequency(float freq);
-    
-  protected:
+
+protected:
     virtual void run();
 
-  private:
+private:
     boolean stateOn;
     uint8_t bitMask;
     volatile uint8_t *portRegister;

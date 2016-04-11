@@ -45,45 +45,45 @@
 /** We say that 50 milliseconds are enough for the signal to stabilize. */
 #define DEFAULT_DEBOUNCE_DELAY_MILIS 50
 
-class Debouncer: public PciListener, public Task {
+class Debouncer : public PciListener, public Task {
 public:
-	/**
-	 * Create a debouncing task with the following parameters.
-	 *  pin - Checking pin for input.
-	 *  pushMode - CLOSE_ON_PUSH / OPEN_ON_PUSH  - Your button are normally wired to be NO (Normally Openned), so USE CLOSE_ON_PUSH.
-	 *   But sometimes it is NC (Normally Closed), in this case use OPEN_ON_PUSH.
-	 *  onPressed() - A callback function pointer. This function is called when the bouncing button is really pushed. (Optional,
-	 *   pass NULL, if you do not want to use this feature.)
-	 *  onReleased(pressTimespan) - A callback function pointer. This function is called when the bouncing button is really
-	 *   released. (Optional, pass NULL, if you do not want to use this feature.)
-	 *   The callback receives the pressTimespan parameter that is the time in milliseconds the button was hold down before
-	 *   it was released.
-	 */
-	Debouncer(byte pin, byte pushMode, ButtonHandler * handler,
-			bool pullUp = false);
+    /**
+     * Create a debouncing task with the following parameters.
+     *  pin - Checking pin for input.
+     *  pushMode - CLOSE_ON_PUSH / OPEN_ON_PUSH  - Your button are normally wired to be NO (Normally Openned), so USE CLOSE_ON_PUSH.
+     *   But sometimes it is NC (Normally Closed), in this case use OPEN_ON_PUSH.
+     *  onPressed() - A callback function pointer. This function is called when the bouncing button is really pushed. (Optional,
+     *   pass NULL, if you do not want to use this feature.)
+     *  onReleased(pressTimespan) - A callback function pointer. This function is called when the bouncing button is really
+     *   released. (Optional, pass NULL, if you do not want to use this feature.)
+     *   The callback receives the pressTimespan parameter that is the time in milliseconds the button was hold down before
+     *   it was released.
+     */
+    Debouncer(byte pin, byte pushMode, ButtonHandler * handler,
+              bool pullUp = false);
 
-	/**
-	 * Please call this function on interrupt.
-	 */
-	virtual void pciHandleInterrupt(byte vect);
+    /**
+     * Please call this function on interrupt.
+     */
+    virtual void pciHandleInterrupt(byte vect);
 
-	void setHandler(ButtonHandler * handler) {
-		this->handler = handler;
-	}
+    void setHandler(ButtonHandler * handler) {
+        this->handler = handler;
+    }
 
-	ButtonHandler * getHandler() {
-		return handler;
-	}
+    ButtonHandler * getHandler() {
+        return handler;
+    }
 
 protected:
 
     virtual void run();
 
 private:
-	byte onLevel;
-	volatile byte state; // 0=off, 1=bouncing, 2=pressing
-	unsigned long pressStart;
-	ButtonHandler * volatile handler;
+    byte onLevel;
+    volatile byte state; // 0=off, 1=bouncing, 2=pressing
+    unsigned long pressStart;
+    ButtonHandler * volatile handler;
 };
 
 #endif

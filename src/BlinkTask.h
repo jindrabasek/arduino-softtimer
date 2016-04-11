@@ -35,85 +35,85 @@
 #define STATE_ON   1
 #define STATE_WAIT 2
 
-class BlinkTask: public Task {
+class BlinkTask : public Task {
 public:
-	/**
-	 * By using this constructor you will be create a perpetual blinker with even on and off time-spans.
-	 *  outPin - The pin to blink.
-	 *  onOffMs - On and off time-span of the blinking in milliseconds.
-	 */
-	BlinkTask(byte outPin, unsigned long onOffMs);
+    /**
+     * By using this constructor you will be create a perpetual blinker with even on and off time-spans.
+     *  outPin - The pin to blink.
+     *  onOffMs - On and off time-span of the blinking in milliseconds.
+     */
+    BlinkTask(byte outPin, unsigned long onOffMs);
 
-	/**
-	 * Using this constructor you can create a perpetual blinker with different on and off time-spans.
-	 *  outPin - The pin to blink.
-	 *  onMs - The pin will be on for this amount of milliseconds.
-	 *  offMs - The pin will be off for this amount of milliseconds.
-	 */
-	BlinkTask(byte outPin, unsigned long onUs, unsigned long offUs);
+    /**
+     * Using this constructor you can create a perpetual blinker with different on and off time-spans.
+     *  outPin - The pin to blink.
+     *  onMs - The pin will be on for this amount of milliseconds.
+     *  offMs - The pin will be off for this amount of milliseconds.
+     */
+    BlinkTask(byte outPin, unsigned long onUs, unsigned long offUs);
 
-	/**
-	 * With this constructor you can create a blinker that stops after an amount of on states.
-	 *  outPin - The pin to blink.
-	 *  onUs - The pin will be on for this amount of milliseconds.
-	 *  offUs - The pin will be off for this amount of milliseconds.
-	 *  count - After this amount of ON state the blinker will remove itself from the Timer Manager.
-	 */
-	BlinkTask(byte outPin, unsigned long onUs, unsigned long offUs, byte count);
+    /**
+     * With this constructor you can create a blinker that stops after an amount of on states.
+     *  outPin - The pin to blink.
+     *  onUs - The pin will be on for this amount of milliseconds.
+     *  offUs - The pin will be off for this amount of milliseconds.
+     *  count - After this amount of ON state the blinker will remove itself from the Timer Manager.
+     */
+    BlinkTask(byte outPin, unsigned long onUs, unsigned long offUs, byte count);
 
-	/**
-	 * Using this constructor you can create a perpetual blinker that has a sleeping phase after an amount of blinking.
-	 *  outPin - The pin to blink.
-	 *  onUs - The pin will be on for this amount of milliseconds.
-	 *  offUs - The pin will be off for this amount of milliseconds.
-	 *  count - The blinker will sleep some time after this amount of ON states.
-	 *  delayUs - After a "count" of ON states the blinker will sleep for this amount of milliseconds. When the time is passed
-	 *   the blinking phase will continue.
-	 */
-	BlinkTask(byte outPin, unsigned long onUs, unsigned long offUs, byte count,
-			unsigned long delayUs);
+    /**
+     * Using this constructor you can create a perpetual blinker that has a sleeping phase after an amount of blinking.
+     *  outPin - The pin to blink.
+     *  onUs - The pin will be on for this amount of milliseconds.
+     *  offUs - The pin will be off for this amount of milliseconds.
+     *  count - The blinker will sleep some time after this amount of ON states.
+     *  delayUs - After a "count" of ON states the blinker will sleep for this amount of milliseconds. When the time is passed
+     *   the blinking phase will continue.
+     */
+    BlinkTask(byte outPin, unsigned long onUs, unsigned long offUs, byte count,
+              unsigned long delayUs);
 
-	/**
-	 * Register the blink Task to the Timer Manager: start blinking.
-	 */
-	void start();
+    /**
+     * Register the blink Task to the Timer Manager: start blinking.
+     */
+    void start();
 
-	/**
-	 * Register the blink Task to the Timer Manager, and start blinking of the amount of time.
-	 * After blinking for this amount of time a blinker will be de-registered from the Timer Manager.
-	 */
-	void start(byte count);
+    /**
+     * Register the blink Task to the Timer Manager, and start blinking of the amount of time.
+     * After blinking for this amount of time a blinker will be de-registered from the Timer Manager.
+     */
+    void start(byte count);
 
-	virtual void run();
+    virtual void run();
 
-	/**
-	 * Remove the blink Task from the Timer Manager.
-	 */
-	void stop();
+    /**
+     * Remove the blink Task from the Timer Manager.
+     */
+    void stop();
 
 private:
-	byte _counter;
-	/** Can be STATE_OFF, STATE_ON, STATE_WAIT */
-	byte _state;
+    byte _counter;
+    /** Can be STATE_OFF, STATE_ON, STATE_WAIT */
+    byte _state;
 
-	uint8_t _bitMask;
-	volatile uint8_t *_portRegister;
+    uint8_t _bitMask;
+    volatile uint8_t *_portRegister;
 
-	/** The pin will be on for this amount of microseconds. */
-	unsigned long onUs;
-	/** The pin will be off for this amount of microseconds. */
-	unsigned long offUs;
-	/** The count of ON states before the task will sleep or be stopped. See delayUs for details. */
-	byte count;
-	/**
-	 * After a "count" of ON states the blinker will sleep for this amount of microseconds.
-	 * Value zero (0) has a special meaning: delay is disabled.
-	 * If delay is disabled AND count is specified, the task will be automatically removed after the count of ON states.
-	 */
-	unsigned long delayUs;
+    /** The pin will be on for this amount of microseconds. */
+    unsigned long onUs;
+    /** The pin will be off for this amount of microseconds. */
+    unsigned long offUs;
+    /** The count of ON states before the task will sleep or be stopped. See delayUs for details. */
+    byte count;
+    /**
+     * After a "count" of ON states the blinker will sleep for this amount of microseconds.
+     * Value zero (0) has a special meaning: delay is disabled.
+     * If delay is disabled AND count is specified, the task will be automatically removed after the count of ON states.
+     */
+    unsigned long delayUs;
 
-	/** Pin level for the ON state. By default the ON means HIGH, you can change this to be LOW. */
-	byte onLevel;
+    /** Pin level for the ON state. By default the ON means HIGH, you can change this to be LOW. */
+    byte onLevel;
 };
 
 #endif

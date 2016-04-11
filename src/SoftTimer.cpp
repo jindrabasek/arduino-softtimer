@@ -33,13 +33,13 @@
  }*/
 
 inline SoftTimer::SoftTimer() :
-	tasks(NULL),
-	lastTask(NULL){
+        tasks(NULL),
+        lastTask(NULL) {
 }
 
 SoftTimer& SoftTimer::instance() {
-	static SoftTimer instance;
-	return instance;
+    static SoftTimer instance;
+    return instance;
 }
 
 /**
@@ -47,40 +47,38 @@ SoftTimer& SoftTimer::instance() {
  */
 void SoftTimer::add(Task* task) {
 
-	// -- A task should be registered only once.
-	task->remove();
+    // -- A task should be registered only once.
+    task->remove();
 
-	if (this->tasks == NULL) {
+    if (this->tasks == NULL) {
 
-		// -- This is the first task being registered.
-		this->tasks = task;
-		this->lastTask = task;
-		task->prevToThisTask = &(this->tasks);
+        // -- This is the first task being registered.
+        this->tasks = task;
+        this->lastTask = task;
+        task->prevToThisTask = &(this->tasks);
 
-	} else {
-		// -- Last task found, let's add this task to the end of the chain.
-		this->lastTask->nextTask = task;
-		task->prevToThisTask = &(this->lastTask->nextTask);
-		this->lastTask = task;
-	}
+    } else {
+        // -- Last task found, let's add this task to the end of the chain.
+        this->lastTask->nextTask = task;
+        task->prevToThisTask = &(this->lastTask->nextTask);
+        this->lastTask = task;
+    }
 
-	task->lastCallTimeMicros = micros();
-	task->nextTask = NULL;
+    task->lastCallTimeMicros = micros();
+    task->nextTask = NULL;
 }
 
 /**
  * Walk through the chain looking for task to call.
  */
 void SoftTimer::run() {
-	Task* task = this->tasks;
-	// -- (If this->_tasks is NULL, than nothing is registered.)
-	while (task != NULL) {
-		if (task->isEnabled()) {
-		    task->testAndRun();
-		}
-		task = task->nextTask;
-	}
+    Task* task = this->tasks;
+    // -- (If this->_tasks is NULL, than nothing is registered.)
+    while (task != NULL) {
+        if (task->isEnabled()) {
+            task->testAndRun();
+        }
+        task = task->nextTask;
+    }
 }
-
-
 
