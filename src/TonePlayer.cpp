@@ -24,8 +24,11 @@
 
  */
 
-#include "TonePlayer.h"
-#include "SoftTimer.h"
+#include <Arduino.h>
+#include <stdbool.h>
+#include <SoftTimer.h>
+#include <TonePlayer.h>
+#include <WString.h>
 
 const float TonePlayer::trot = 1.05946309435929; // -- The twelfth root of two
 const float TonePlayer::A440 = 440.0; // -- A440 (pitch standard)

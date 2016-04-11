@@ -24,10 +24,12 @@
 
  */
 
-#include "Arduino.h"
-#include "Rotary.h"
-#include <Task.h>
+#include <Arduino.h>
 #include <PciManager.h>
+#include <Rotary.h>
+#include <stdbool.h>
+#include <SoftTimer.h>
+#include <Task.h>
 
 #define EVENT_NOTIFIED 0
 #define EVENT_OCCURRED 1

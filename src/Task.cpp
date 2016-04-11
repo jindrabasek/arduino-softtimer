@@ -24,8 +24,10 @@
 
  */
 
-#include "Arduino.h"
-#include "Task.h"
+#include <Arduino.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <Task.h>
 
 Task::Task(unsigned long periodUs, bool enabled) :
         periodUs(periodUs),

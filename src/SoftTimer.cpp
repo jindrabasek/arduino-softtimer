@@ -24,8 +24,10 @@
 
  */
 
-#include "Arduino.h"
-#include "SoftTimer.h"
+#include <Arduino.h>
+#include <stddef.h>
+#include <SoftTimer.h>
+#include <Task.h>
 
 // Jindra: do it manually
 /*void loop() {

@@ -27,12 +27,11 @@
 #ifndef DEBOUNDER_H
 #define DEBOUNDER_H
 
-#include <SoftTimer.h>
-#include <DelayRun.h>
-#include <PciListener.h>
-//#include "../PciManager/PciListener.h"
 #include <Arduino.h>
 #include <ButtonHandler.h>
+#include <PciListener.h>
+#include <stdbool.h>
+#include <Task.h>
 
 #define MODE_OPEN_ON_PUSH HIGH
 #define MODE_CLOSE_ON_PUSH LOW

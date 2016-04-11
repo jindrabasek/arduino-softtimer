@@ -24,8 +24,9 @@
 
  */
 
-#include "SoftTimer.h"
-#include "FrequencyTask.h"
+#include <Arduino.h>
+#include <FrequencyTask.h>
+#include <stdbool.h>
 
 FrequencyTask::FrequencyTask(int outPin, float freq) :
         Task(0),

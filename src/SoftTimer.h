@@ -27,7 +27,7 @@
 #ifndef SOFTTIMER_H
 #define SOFTTIMER_H
 
-#include "Task.h"
+#include <Task.h>
 
 class SoftTimer {
 public:

@@ -27,9 +27,8 @@
 #ifndef BLINKTASK_H
 #define BLINKTASK_H
 
-#include <inttypes.h>
-#include "Arduino.h"
-#include "Task.h"
+#include <Arduino.h>
+#include <Task.h>
 
 #define STATE_OFF  0
 #define STATE_ON   1

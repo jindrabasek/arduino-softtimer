@@ -24,8 +24,8 @@
 
  */
 
-#include "SoftTimer.h"
-#include "SoftPwmTask.h"
+#include <Arduino.h>
+#include <SoftPwmTask.h>
 
 SoftPwmTask::SoftPwmTask(int pin) :
         Task(30),

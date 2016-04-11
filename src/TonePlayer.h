@@ -27,8 +27,9 @@
 #ifndef TONEPLAYER_H
 #define TONEPLAYER_H
 
-#include "Arduino.h"
-#include "Task.h"
+#include <stdbool.h>
+#include <Task.h>
+#include <WString.h>
 
 class TonePlayer : Task {
 public:
@@ -67,7 +68,8 @@ private:
     int outPin;
     unsigned long baseLength;
     String tones;
-    unsigned int pos;bool playing;
+    unsigned int pos;
+    bool playing;
 };
 
 #endif

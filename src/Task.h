@@ -27,6 +27,8 @@
 #ifndef TASK_H
 #define TASK_H
 
+#include <stdbool.h>
+
 /**
  * Task is a job that should be called repeatedly,
  */

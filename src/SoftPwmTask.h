@@ -27,8 +27,8 @@
 #ifndef SOFTPWMTASK_H
 #define SOFTPWMTASK_H
 
-#include "Task.h"
-#include "Arduino.h"
+#include <Arduino.h>
+#include <Task.h>
 
 class SoftPwmTask : public Task {
 public:

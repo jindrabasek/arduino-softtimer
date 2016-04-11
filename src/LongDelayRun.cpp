@@ -5,8 +5,9 @@
  *      Author: jindra
  */
 
-#include "LongDelayRun.h"
-#include "SoftTimer.h"
+#include <LongDelayRun.h>
+#include <SoftTimer.h>
+#include <Task.h>
 
 LongDelayRun::LongDelayRun(unsigned long delayHours, unsigned long delayMs,
                            Task* followedBy) :

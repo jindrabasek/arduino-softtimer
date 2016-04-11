@@ -8,7 +8,7 @@
 #ifndef LIBRARIES_SOFTTIMER_SRC_LONGTASK_H_
 #define LIBRARIES_SOFTTIMER_SRC_LONGTASK_H_
 
-#include "Task.h"
+#include <Task.h>
 
 class LongTask : public Task {
 public:

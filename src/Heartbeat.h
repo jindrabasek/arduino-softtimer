@@ -27,8 +27,8 @@
 #ifndef HEARTBEAT_H
 #define HEARTBEAT_H
 
-#include "Arduino.h"
-#include "BlinkTask.h"
+#include <Arduino.h>
+#include <BlinkTask.h>
 
 class Heartbeat : public BlinkTask {
 public:

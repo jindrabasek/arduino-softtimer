@@ -24,9 +24,10 @@
 
  */
 
-#include <Arduino.h>
-#include "DelayRun.h"
-#include "SoftTimer.h"
+#include <DelayRun.h>
+#include <stdbool.h>
+#include <SoftTimer.h>
+#include <Task.h>
 
 #define STATE_STARTING 0
 #define STATE_ON_DELAY 1

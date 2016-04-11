@@ -8,7 +8,7 @@
 #ifndef LIBRARIES_SOFTTIMER_SRC_LONGDELAYRUN_H_
 #define LIBRARIES_SOFTTIMER_SRC_LONGDELAYRUN_H_
 
-#include "LongTask.h"
+#include <LongTask.h>
 
 class LongDelayRun : public LongTask {
 public:

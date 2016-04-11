@@ -24,8 +24,8 @@
 
  */
 
-#include "Heartbeat.h"
-#include "SoftTimer.h"
+#include <Arduino.h>
+#include <Heartbeat.h>
 
 Heartbeat::Heartbeat(byte outPin) :
         BlinkTask(outPin, 200, 100, 2, 4000) {

@@ -27,11 +27,11 @@
 #ifndef ROTARY_H
 #define ROTARY_H
 
-#include <SoftTimer.h>
-#include <PciListener.h>
 #include <Arduino.h>
-#include <PciListenerImp2.h>
 #include <IPciChangeHandler.h>
+#include <PciListenerImp2.h>
+#include <stdbool.h>
+#include <Task.h>
 
 #define DIRECTION_CW 1
 #define DIRECTION_CCW -1

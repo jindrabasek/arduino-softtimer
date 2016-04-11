@@ -24,8 +24,9 @@
 
  */
 
-#include "BlinkTask.h"
-#include "SoftTimer.h"
+#include <Arduino.h>
+#include <BlinkTask.h>
+#include <SoftTimer.h>
 
 BlinkTask::BlinkTask(byte outPin, unsigned long onOffUs) :
         BlinkTask(outPin, onOffUs, onOffUs, 0, 0) {

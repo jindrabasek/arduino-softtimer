@@ -27,9 +27,9 @@
 #ifndef FREQUENCYTASK_H
 #define FREQUENCYTASK_H
 
-#include "Task.h"
-#include "DelayRun.h"
-#include "Arduino.h"
+#include <Arduino.h>
+#include <stdint.h>
+#include <Task.h>
 
 class FrequencyTask : public Task {
 public:

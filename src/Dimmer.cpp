@@ -24,8 +24,11 @@
 
  */
 
-#include "SoftTimer.h"
-#include "Dimmer.h"
+#include <Arduino.h>
+#include <Dimmer.h>
+#include <stdbool.h>
+#include <SoftPwmTask.h>
+#include <SoftTimer.h>
 
 Dimmer::Dimmer(SoftPwmTask* pwm, int frequencyMs) :
         Task(10) {

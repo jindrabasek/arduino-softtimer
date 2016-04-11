@@ -27,9 +27,8 @@
 #ifndef DIMMER_H
 #define DIMMER_H
 
-#include "Task.h"
-#include "SoftPwmTask.h"
-#include "Arduino.h"
+#include <Arduino.h>
+#include <SoftPwmTask.h>
 
 #define DIMMER_DIRECTION_HIGH 1
 #define DIMMER_DIRECTION_LOW -1

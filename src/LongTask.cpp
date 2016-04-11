@@ -5,8 +5,10 @@
  *      Author: jindra
  */
 
-#include "LongTask.h"
 #include <Arduino.h>
+#include <LongTask.h>
+#include <stdbool.h>
+#include <Task.h>
 
 LongTask::LongTask(unsigned long periodHours, unsigned long periodUs,
                    bool enabled) :
