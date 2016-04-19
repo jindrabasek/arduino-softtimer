@@ -95,9 +95,6 @@ private:
     /** Can be STATE_OFF, STATE_ON, STATE_WAIT */
     byte _state;
 
-    uint8_t _bitMask;
-    volatile uint8_t *_portRegister;
-
     /** The pin will be on for this amount of microseconds. */
     unsigned long onUs;
     /** The pin will be off for this amount of microseconds. */
@@ -110,6 +107,9 @@ private:
      * If delay is disabled AND count is specified, the task will be automatically removed after the count of ON states.
      */
     unsigned long delayUs;
+
+    uint8_t _bitMask;
+    volatile uint8_t *_portRegister;
 
     /** Pin level for the ON state. By default the ON means HIGH, you can change this to be LOW. */
     byte onLevel;

@@ -24,7 +24,7 @@ public:
 
 protected:
 
-    virtual void testAndRun();
+    virtual bool test();
 
 private:
     static unsigned long roundPeriodUs(unsigned long periodUs);

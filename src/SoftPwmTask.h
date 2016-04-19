@@ -60,13 +60,13 @@ private:
     byte value;
     byte counter;
 
-    uint8_t bitMask;
-    volatile uint8_t *portRegister;
-
     /**
      * The "always on" level of the PWM. The default is 255.
      */
     byte upperLimit;
+
+    uint8_t bitMask;
+    volatile uint8_t *portRegister;
 };
 
 #endif

@@ -42,11 +42,10 @@ void LongTask::setPeriod(unsigned long periodHours, unsigned long periodUs) {
     inLastPeriod = periodHours == 0;
 }
 
-void LongTask::testAndRun() {
+bool LongTask::test() {
     if (isStartAtEarliest()) {
         setStartAtEarliest(false);
-        markJustCalled();
-        run();
+        return true;
     } else {
         unsigned long now = micros();
         unsigned long calc = getLastCallTimeMicros() + getPeriodUs();
@@ -59,8 +58,7 @@ void LongTask::testAndRun() {
             setLastCallTimeMicros(now);
             if (periodHours == 0 || hoursPassed >= periodHours) {
                 if (inLastPeriod) {
-                    markJustCalled();
-                    run();
+                    return true;
                 } else {
                     inLastPeriod = true;
                     if (endPeriodUs > 0) {
@@ -73,6 +71,7 @@ void LongTask::testAndRun() {
             }
         }
     }
+    return false;
 }
 
 inline unsigned long LongTask::roundPeriodUs(unsigned long periodUs) {

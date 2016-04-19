@@ -68,8 +68,8 @@ private:
     int outPin;
     unsigned long baseLength;
     String tones;
-    unsigned int pos;
     bool playing;
+    unsigned int pos;
 };
 
 #endif

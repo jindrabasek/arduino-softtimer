@@ -78,9 +78,23 @@ void SoftTimer::run() {
     // -- (If this->_tasks is NULL, than nothing is registered.)
     while (task != NULL) {
         if (task->isEnabled()) {
-            task->testAndRun();
+            if (task->test()){
+                if (task->threadPool != NULL) {
+                    //Serial.println(F("With thread pool"));
+                    Thread * thread = task->threadPool->aquireThread();
+                    //Serial.println(F("Thread aquired"));
+                    thread->setRunnable(task);
+                    thread->enable();
+                    //Serial.println(F("Task enabled"));
+                    yield();
+                } else {
+                    task->markJustCalled();
+                    task->run();
+                }
+            }
         }
         task = task->nextTask;
     }
+    yield();
 }
 

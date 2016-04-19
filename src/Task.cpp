@@ -35,6 +35,7 @@ Task::Task(unsigned long periodUs, bool enabled) :
         nextTask(NULL),
         prevToThisTask(
         NULL),
+        threadPool(NULL),
         enabled(enabled),
         startAtEarliest(false) {
 }
@@ -62,7 +63,7 @@ void Task::remove() {
 /**
  * Test a task and call the callback if its period was passed since last call.
  */
-void Task::testAndRun() {
+bool Task::test() {
     unsigned long now = micros();
     unsigned long calc = lastCallTimeMicros + periodUs;
     if (startAtEarliest || ((now >= calc) && (calc >= lastCallTimeMicros // -- Nothing was overflown.
@@ -70,9 +71,9 @@ void Task::testAndRun() {
             )) || (now < lastCallTimeMicros && lastCallTimeMicros <= calc)) // -- timer overflows, but interval-end does not
             {
         startAtEarliest = false;
-        markJustCalled();
-        run();
+        return true;
     }
+    return false;
 }
 
 Task::~Task() {

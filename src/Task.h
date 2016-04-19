@@ -27,12 +27,16 @@
 #ifndef TASK_H
 #define TASK_H
 
+#include <Runnable.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <Scheduler.h>
+#include <SingleThreadPool.h>
 
 /**
  * Task is a job that should be called repeatedly,
  */
-class Task {
+class Task : public Runnable {
 public:
     virtual ~Task();
 
@@ -67,11 +71,22 @@ public:
         return periodUs;
     }
 
+    void setThreadPool( SingleThreadPool* threadPool) {
+        this->threadPool = threadPool;
+    }
+
     friend class SoftTimer;
 
 protected:
 
-    virtual void testAndRun();
+    virtual void loop(){
+        markJustCalled();
+        run();
+        Scheduler.disable();
+        threadPool->releaseThread();
+    }
+
+    virtual bool test();
 
     /**
      * The function that will be called when the period time was passed since the lastCallTime.
@@ -115,6 +130,8 @@ private:
      * This member is for internal use only. Do not change!
      */
     Task** prevToThisTask;
+
+    SingleThreadPool * threadPool;
 
     volatile bool enabled;
 
