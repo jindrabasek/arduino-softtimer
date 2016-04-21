@@ -37,7 +37,8 @@ Task::Task(unsigned long periodUs, bool enabled) :
         NULL),
         threadPool(NULL),
         enabled(enabled),
-        startAtEarliest(false) {
+        startAtEarliest(false),
+        running(false){
 }
 
 void Task::startAtEarliestOportunity() {

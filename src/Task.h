@@ -71,7 +71,7 @@ public:
         return periodUs;
     }
 
-    void setThreadPool( SingleThreadPool* threadPool) {
+    void setThreadPool(SingleThreadPool* threadPool) {
         this->threadPool = threadPool;
     }
 
@@ -82,6 +82,7 @@ protected:
     virtual void loop(){
         markJustCalled();
         run();
+        running = false;
         Scheduler.disable();
         threadPool->releaseThread();
     }
@@ -114,7 +115,7 @@ private:
     /**
      * The timeslot in milliseconds the handler should be called. If the value is near 1 the handler will be called in every loop.
      */
-    unsigned long periodUs;
+    volatile unsigned long periodUs;
 
     /**
      * The last call (start) time of the task. You can reset the task by setting this value to micros().
@@ -124,18 +125,20 @@ private:
     /**
      * This member is for internal use only. Do not change!
      */
-    Task* nextTask;
+    Task * volatile nextTask;
 
     /**
      * This member is for internal use only. Do not change!
      */
-    Task** prevToThisTask;
+    Task* volatile * volatile prevToThisTask;
 
-    SingleThreadPool * threadPool;
+    SingleThreadPool * volatile threadPool;
 
     volatile bool enabled;
 
     volatile bool startAtEarliest;
+
+    volatile bool running;
 
 };
 
