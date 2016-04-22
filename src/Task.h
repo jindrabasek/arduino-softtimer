@@ -80,6 +80,7 @@ public:
 protected:
 
     virtual void loop(){
+        setStartAtEarliest(false);
         markJustCalled();
         run();
         running = false;

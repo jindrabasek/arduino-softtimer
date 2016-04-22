@@ -71,7 +71,7 @@ bool Task::test() {
             || lastCallTimeMicros > now // -- Both timer and interval-end overflows
             )) || (now < lastCallTimeMicros && lastCallTimeMicros <= calc)) // -- timer overflows, but interval-end does not
             {
-        startAtEarliest = false;
+        setStartAtEarliest(false);
         return true;
     }
     return false;

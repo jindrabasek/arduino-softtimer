@@ -79,12 +79,19 @@ void SoftTimer::run() {
     while (task != NULL) {
         if (task->isEnabled() && !task->running) {
             if (task->test()){
-                task->running = true;
                 if (task->threadPool != NULL) {
-                    Thread * thread = task->threadPool->aquireThread();
-                    thread->setRunnable(task);
-                    thread->enable();
+                    Thread * thread = task->threadPool->aquireThreadNonBlocking();
+                    if (thread == NULL) {
+                        // cannot start, there is no thread available
+                        // try again at earliest opportunity
+                        task->startAtEarliestOportunity();
+                    } else {
+                        task->running = true;
+                        thread->setRunnable(task);
+                        thread->enable();
+                    }
                 } else {
+                    task->running = true;
                     task->markJustCalled();
                     task->run();
                     task->running = false;
