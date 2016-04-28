@@ -27,9 +27,10 @@
 #ifndef TASK_H
 #define TASK_H
 
+#include <Arduino.h>
 #include <Runnable.h>
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdint.h>
 #include <Scheduler.h>
 #include <SingleThreadPool.h>
 
@@ -60,11 +61,11 @@ public:
     virtual void markJustCalled();
 
     bool isEnabled() const {
-        return enabled;
+        return bitRead(flags, ENABLED_FLAG_BIT);
     }
 
     void setEnabled(bool enabled) {
-        this->enabled = enabled;
+        bitWrite(flags, ENABLED_FLAG_BIT, enabled);
     }
 
     unsigned long getPeriodUs() const {
@@ -83,7 +84,7 @@ protected:
         setStartAtEarliest(false);
         markJustCalled();
         run();
-        running = false;
+        setRunning(false);
         Scheduler.disable();
         threadPool->releaseThread();
     }
@@ -103,12 +104,20 @@ protected:
         this->lastCallTimeMicros = lastCallTimeMicros;
     }
 
-    volatile bool isStartAtEarliest() const {
-        return startAtEarliest;
+    bool isStartAtEarliest() const {
+        return bitRead(flags, START_AT_EARLIEST_FLAG_BIT);
     }
 
-    void setStartAtEarliest(volatile bool startAtEarliest) {
-        this->startAtEarliest = startAtEarliest;
+    void setStartAtEarliest(bool startAtEarliest) {
+        bitWrite(flags, START_AT_EARLIEST_FLAG_BIT, startAtEarliest);
+    }
+
+    bool isRunning() const {
+        return bitRead(flags, RUNNING_FLAG_BIT);
+    }
+
+    void setRunning(bool running) {
+        bitWrite(flags, RUNNING_FLAG_BIT, running);
     }
 
 private:
@@ -135,11 +144,11 @@ private:
 
     SingleThreadPool * volatile threadPool;
 
-    volatile bool enabled;
+    volatile uint8_t flags;
 
-    volatile bool startAtEarliest;
-
-    volatile bool running;
+    static const int ENABLED_FLAG_BIT = 0;
+    static const int START_AT_EARLIEST_FLAG_BIT = ENABLED_FLAG_BIT + 1;
+    static const int RUNNING_FLAG_BIT = START_AT_EARLIEST_FLAG_BIT + 1;
 
 };
 

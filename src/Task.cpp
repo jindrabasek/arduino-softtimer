@@ -36,13 +36,12 @@ Task::Task(unsigned long periodUs, bool enabled) :
         prevToThisTask(
         NULL),
         threadPool(NULL),
-        enabled(enabled),
-        startAtEarliest(false),
-        running(false){
+        flags(0) {
+    setEnabled(enabled);
 }
 
 void Task::startAtEarliestOportunity() {
-    this->startAtEarliest = true;
+    setStartAtEarliest(true);
 }
 
 void Task::markJustCalled() {
@@ -67,7 +66,7 @@ void Task::remove() {
 bool Task::test() {
     unsigned long now = micros();
     unsigned long calc = lastCallTimeMicros + periodUs;
-    if (startAtEarliest || ((now >= calc) && (calc >= lastCallTimeMicros // -- Nothing was overflown.
+    if (isStartAtEarliest() || ((now >= calc) && (calc >= lastCallTimeMicros // -- Nothing was overflown.
             || lastCallTimeMicros > now // -- Both timer and interval-end overflows
             )) || (now < lastCallTimeMicros && lastCallTimeMicros <= calc)) // -- timer overflows, but interval-end does not
             {

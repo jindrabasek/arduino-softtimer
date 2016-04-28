@@ -77,7 +77,7 @@ void SoftTimer::run() {
     Task* task = this->tasks;
     // -- (If this->_tasks is NULL, than nothing is registered.)
     while (task != NULL) {
-        if (task->isEnabled() && !task->running) {
+        if (task->isEnabled() && !task->isRunning()) {
             if (task->test()){
                 if (task->threadPool != NULL) {
                     Thread * thread = task->threadPool->aquireThreadNonBlocking();
@@ -86,15 +86,15 @@ void SoftTimer::run() {
                         // try again at earliest opportunity
                         task->startAtEarliestOportunity();
                     } else {
-                        task->running = true;
+                        task->setRunning(true);
                         thread->setRunnable(task);
                         thread->enable();
                     }
                 } else {
-                    task->running = true;
+                    task->setRunning(true);
                     task->markJustCalled();
                     task->run();
-                    task->running = false;
+                    task->setRunning(false);
                 }
             }
         }

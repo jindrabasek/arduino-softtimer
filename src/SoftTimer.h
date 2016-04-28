@@ -47,8 +47,8 @@ public:
     void run();
 private:
     SoftTimer();
-
     void testAndCall(Task* task);
+
     Task* tasks;
     Task* lastTask;
 };
