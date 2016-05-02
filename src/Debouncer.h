@@ -27,10 +27,10 @@
 #ifndef DEBOUNDER_H
 #define DEBOUNDER_H
 
-#include <Arduino.h>
 #include <ButtonHandler.h>
 #include <PciListener.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <Task.h>
 
 #define MODE_OPEN_ON_PUSH HIGH
@@ -58,13 +58,13 @@ public:
      *   The callback receives the pressTimespan parameter that is the time in milliseconds the button was hold down before
      *   it was released.
      */
-    Debouncer(byte pin, byte pushMode, ButtonHandler * handler,
+    Debouncer(uint8_t pin, uint8_t pushMode, ButtonHandler * handler,
               bool pullUp = false);
 
     /**
      * Please call this function on interrupt.
      */
-    virtual void pciHandleInterrupt(byte vect);
+    virtual void pciHandleInterrupt(uint8_t vect);
 
     void setHandler(ButtonHandler * handler) {
         this->handler = handler;
@@ -79,8 +79,8 @@ protected:
     virtual void run();
 
 private:
-    byte onLevel;
-    volatile byte state; // 0=off, 1=bouncing, 2=pressing
+    uint8_t onLevel;
+    volatile uint8_t state; // 0=off, 1=bouncing, 2=pressing
     unsigned long pressStart;
     ButtonHandler * volatile handler;
 };

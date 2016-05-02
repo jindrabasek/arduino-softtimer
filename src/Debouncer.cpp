@@ -28,10 +28,11 @@
 #include <ButtonHandler.h>
 #include <Debouncer.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <SoftTimer.h>
 #include <Task.h>
 
-Debouncer::Debouncer(byte pin, byte pushMode, ButtonHandler * handler,
+Debouncer::Debouncer(uint8_t pin, uint8_t pushMode, ButtonHandler * handler,
 bool pullUp) :
         PciListener(pin),
         Task(DEFAULT_DEBOUNCE_DELAY_MILIS, false),
@@ -49,12 +50,12 @@ bool pullUp) :
     SoftTimer::instance().add(this);
 }
 
-void Debouncer::pciHandleInterrupt(byte vect) {
+void Debouncer::pciHandleInterrupt(uint8_t vect) {
     if ((this->state == STATE_OFF) || (this->state == STATE_ON)) {
-        int oppositeLevel =
+        uint8_t oppositeLevel =
                 this->state == STATE_OFF ? this->onLevel : !this->onLevel;
         // -- Test pin level, probably more pins are used by this interrupt.
-        volatile int val = digitalRead(this->pciPin);
+        volatile uint8_t val = digitalRead(this->pciPin);
         if (val == oppositeLevel) {
             if (this->state == STATE_OFF) {
                 this->pressStart = millis(); // -- Save the first time to the start of this task.
@@ -72,7 +73,7 @@ void Debouncer::run() {
         setEnabled(false);
         return;
     }
-    int val = digitalRead(this->pciPin);
+    uint8_t val = digitalRead(this->pciPin);
     this->setEnabled(false);
     ;
     if (this->state == STATE_OFFON_BOUNCING) {

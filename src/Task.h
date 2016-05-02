@@ -146,9 +146,9 @@ private:
 
     volatile uint8_t flags;
 
-    static const int ENABLED_FLAG_BIT = 0;
-    static const int START_AT_EARLIEST_FLAG_BIT = ENABLED_FLAG_BIT + 1;
-    static const int RUNNING_FLAG_BIT = START_AT_EARLIEST_FLAG_BIT + 1;
+    static const uint8_t ENABLED_FLAG_BIT = 0;
+    static const uint8_t START_AT_EARLIEST_FLAG_BIT = ENABLED_FLAG_BIT + 1;
+    static const uint8_t RUNNING_FLAG_BIT = START_AT_EARLIEST_FLAG_BIT + 1;
 
 };
 
