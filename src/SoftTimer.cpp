@@ -34,20 +34,15 @@
  SoftTimer.run();
  }*/
 
-inline SoftTimer::SoftTimer() :
+inline SoftTimerT::SoftTimerT() :
         tasks(NULL),
         lastTask(NULL) {
-}
-
-SoftTimer& SoftTimer::instance() {
-    static SoftTimer instance;
-    return instance;
 }
 
 /**
  * Register a task in the timer manager.
  */
-void SoftTimer::add(Task* task) {
+void SoftTimerT::add(Task* task) {
 
     // -- A task should be registered only once.
     task->remove();
@@ -73,7 +68,7 @@ void SoftTimer::add(Task* task) {
 /**
  * Walk through the chain looking for task to call.
  */
-void SoftTimer::run() {
+void SoftTimerT::run() {
     Task* task = this->tasks;
     // -- (If this->_tasks is NULL, than nothing is registered.)
     while (task != NULL) {
@@ -102,4 +97,6 @@ void SoftTimer::run() {
         yield();
     }
 }
+
+SoftTimerT SoftTimer;
 

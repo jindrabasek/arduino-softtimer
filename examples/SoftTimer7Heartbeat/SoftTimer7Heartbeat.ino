@@ -9,7 +9,7 @@ Heartbeat heartbeat(LED_PIN);
 Task t1(0, myLoop);
 
 void setup() {
-  SoftTimer::instance().add(&t1);
+  SoftTimer.add(&t1);
   // -- Put your setup code here, to run once.
 }
 

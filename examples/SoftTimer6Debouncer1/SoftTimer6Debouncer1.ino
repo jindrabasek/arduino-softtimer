@@ -10,7 +10,7 @@ Debouncer debouncer(INPUT_PIN, MODE_CLOSE_ON_PUSH, onPressed, onReleased);
 
 void setup() {
   Serial.begin(9800);
-  PciManager::instance().registerListener(INPUT_PIN, &debouncer);
+  PciManager.registerListener(INPUT_PIN, &debouncer);
   Serial.println("Ready.");
 }
 

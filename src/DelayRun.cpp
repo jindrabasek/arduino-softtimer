@@ -41,7 +41,7 @@ void DelayRun::run() {
     // -- Remove me from Timer Manager.
     remove();
 
-    SoftTimer::instance().add(followedBy);
+    SoftTimer.add(followedBy);
     followedBy->startAtEarliestOportunity();
     followedBy->setEnabled(true);
 }

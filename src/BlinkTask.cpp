@@ -60,7 +60,7 @@ void BlinkTask::start() {
     this->_state = STATE_OFF;
     this->_counter = 0;
     this->setPeriodUs(0);
-    SoftTimer::instance().add(this);
+    SoftTimer.add(this);
 }
 
 void BlinkTask::start(byte count) {

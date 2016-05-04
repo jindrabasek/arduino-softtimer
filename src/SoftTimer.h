@@ -29,13 +29,12 @@
 
 #include <Task.h>
 
-class SoftTimer {
+class SoftTimerT {
 public:
 
-    SoftTimer(const SoftTimer& that) = delete;
-    void operator=(const SoftTimer& that) = delete;
-    static SoftTimer& instance();
-
+    SoftTimerT();
+    SoftTimerT(const SoftTimerT& that) = delete;
+    void operator=(const SoftTimerT& that) = delete;
     /**
      * Register a task in the timer manager.
      */
@@ -46,11 +45,12 @@ public:
      */
     void run();
 private:
-    SoftTimer();
     void testAndCall(Task* task);
 
     Task* tasks;
     Task* lastTask;
 };
+
+extern SoftTimerT SoftTimer;
 
 #endif

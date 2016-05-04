@@ -44,10 +44,10 @@ Rotary::Rotary(byte pinA, byte pinB,
         stateCCW(EVENT_NOTIFIED),
         onRotation(onRotation) {
 
-    PciManager::instance().registerListener(&this->listenerA);
-    PciManager::instance().registerListener(&this->listenerB);
+    PciManager.registerListener(&this->listenerA);
+    PciManager.registerListener(&this->listenerB);
 
-    SoftTimer::instance().add(this);
+    SoftTimer.add(this);
 }
 
 void Rotary::pciHandleChange(byte changedTo, PciListenerImp2* listener) {

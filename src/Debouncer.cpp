@@ -47,7 +47,7 @@ bool pullUp) :
     this->state =
             digitalRead(this->pciPin) == this->onLevel ? STATE_ON : STATE_OFF;
 
-    SoftTimer::instance().add(this);
+    SoftTimer.add(this);
 }
 
 void Debouncer::pciHandleInterrupt(uint8_t vect) {

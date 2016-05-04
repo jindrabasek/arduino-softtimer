@@ -43,8 +43,8 @@ Dimmer::Dimmer(SoftPwmTask* pwm, int frequencyMs) :
 
 void Dimmer::startPulsate() {
     this->stopOnLimit = false;
-    SoftTimer::instance().add(this->pwm);
-    SoftTimer::instance().add(this);
+    SoftTimer.add(this->pwm);
+    SoftTimer.add(this);
 }
 
 void Dimmer::hold() {

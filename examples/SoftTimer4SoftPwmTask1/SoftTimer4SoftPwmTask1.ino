@@ -9,7 +9,7 @@ SoftPwmTask pwm(OUT_PIN);
 void setup(void)
 {
   // -- Register the task in the timer manager.
-  SoftTimer::instance().add(&pwm);
+  SoftTimer.add(&pwm);
   
   // -- Writes a value of 128. That means output will "dimmed" half way. 
   pwm.analogWrite(128);

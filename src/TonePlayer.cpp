@@ -48,7 +48,7 @@ void TonePlayer::play(String tones) {
     this->setPeriodUs(0);
     this->playing = true;
     this->pos = 0;
-    SoftTimer::instance().add(this);
+    SoftTimer.add(this);
 }
 
 void TonePlayer::run() {

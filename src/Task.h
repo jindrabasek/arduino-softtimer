@@ -76,7 +76,7 @@ public:
         this->threadPool = threadPool;
     }
 
-    friend class SoftTimer;
+    friend class SoftTimerT;
 
 protected:
 
