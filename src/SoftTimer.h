@@ -43,7 +43,7 @@ public:
     /**
      * For internal use only. You do not need to call this function.
      */
-    void run();
+    void run(void (*loggingCallback)(Task * executedTask) = NULL);
 private:
     void testAndCall(Task* task);
 

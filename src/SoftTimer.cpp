@@ -25,10 +25,13 @@
  */
 
 #include <Arduino.h>
+#include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
+#include <SingleThreadPool.h>
 #include <SoftTimer.h>
 #include <Task.h>
-
+#include <Thread.h>
 // Jindra: do it manually
 /*void loop() {
  SoftTimer.run();
@@ -68,24 +71,31 @@ void SoftTimerT::add(Task* task) {
 /**
  * Walk through the chain looking for task to call.
  */
-void SoftTimerT::run() {
+void SoftTimerT::run(void (*loggingCallback)(Task * executedTask)) {
     Task* task = this->tasks;
     // -- (If this->_tasks is NULL, than nothing is registered.)
     while (task != NULL) {
         if (task->isEnabled() && !task->isRunning()) {
-            if (task->test()){
+            if (task->test()) {
                 if (task->threadPool != NULL) {
-                    Thread * thread = task->threadPool->aquireThreadNonBlocking();
+                    Thread * thread =
+                            task->threadPool->aquireThreadNonBlocking();
                     if (thread == NULL) {
                         // cannot start, there is no thread available
                         // try again at earliest opportunity
                         task->startAtEarliestOportunity();
                     } else {
+                        if (loggingCallback != NULL) {
+                            loggingCallback(task);
+                        }
                         task->setRunning(true);
                         thread->setRunnable(task);
                         thread->enable();
                     }
                 } else {
+                    if (loggingCallback != NULL) {
+                        loggingCallback(task);
+                    }
                     task->setRunning(true);
                     task->markJustCalled();
                     task->run();
