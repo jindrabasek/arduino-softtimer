@@ -1,0 +1,6 @@
+# Datatypes (KEYWORD1)
+# Methods and Functions (KEYWORD2)
+# Constants (LITERAL1)
+
+TonePlayer	KEYWORD1
+play	KEYWORD2

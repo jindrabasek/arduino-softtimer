@@ -1,0 +1,15 @@
+# Datatypes (KEYWORD1)
+# Methods and Functions (KEYWORD2)
+# Constants (LITERAL1)
+
+SoftPwmTask	KEYWORD1
+analogWrite	KEYWORD2
+
+Dimmer    KEYWORD1
+startPulsate    KEYWORD2
+hold    KEYWORD2
+off    KEYWORD2
+revertDirection    KEYWORD2
+setFrequency    KEYWORD2
+getUpperLimit    KEYWORD2
+

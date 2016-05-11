@@ -1,0 +1,13 @@
+# Datatypes (KEYWORD1)
+# Methods and Functions (KEYWORD2)
+# Constants (LITERAL1)
+
+BlinkTask	KEYWORD1
+start	KEYWORD2
+stop	KEYWORD2
+
+Heartbeat	KEYWORD1
+
+FrequencyTask    KEYWORD1
+setFrequency    KEYWORD2
+

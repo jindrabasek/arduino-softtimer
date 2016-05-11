@@ -1,0 +1,6 @@
+# Datatypes (KEYWORD1)
+# Methods and Functions (KEYWORD2)
+# Constants (LITERAL1)
+
+Rotary    KEYWORD1
+pciHandleChange    KEYWORD2

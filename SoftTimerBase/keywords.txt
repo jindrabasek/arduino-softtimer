@@ -1,0 +1,13 @@
+# Datatypes (KEYWORD1)
+# Methods and Functions (KEYWORD2)
+# Constants (LITERAL1)
+
+SoftTimer	KEYWORD1
+add	KEYWORD2
+remove	KEYWORD2
+
+Task	KEYWORD1
+
+DelayRun    KEYWORD1
+startDelayed    KEYWORD2
+
