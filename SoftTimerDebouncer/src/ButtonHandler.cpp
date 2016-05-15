@@ -7,16 +7,4 @@
 
 #include <ButtonHandler.h>
 
-ButtonHandler::ButtonHandler() {
-}
-
-ButtonHandler::~ButtonHandler() {
-}
-
-inline void ButtonHandler::onPressed() {
-}
-
-inline void ButtonHandler::onReleased(unsigned long pressTimespan) {
-}
-
 ButtonHandler ButtonHandler::voidButtonHandler;

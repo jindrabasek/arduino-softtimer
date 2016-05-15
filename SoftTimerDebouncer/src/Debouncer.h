@@ -44,6 +44,12 @@
 /** We say that 50 milliseconds are enough for the signal to stabilize. */
 #define DEFAULT_DEBOUNCE_DELAY_MILIS 50
 
+// Do not define virtual destructor on purpose - class
+// and its children is not expected to need destructors,
+// it saves a lot of SRAM otherwise occupied by VTABLE
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
 class Debouncer : public PciListener, public Task {
 public:
     /**
@@ -84,6 +90,8 @@ private:
     unsigned long pressStart;
     ButtonHandler * volatile handler;
 };
+
+#pragma GCC diagnostic pop
 
 #endif
 
