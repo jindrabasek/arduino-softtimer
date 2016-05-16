@@ -40,6 +40,8 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 
+class Schedulable;
+
 /**
  * Task is a job that should be called repeatedly,
  */
@@ -53,7 +55,7 @@ public:
      *  callback - Is a static function reference, the function will be called each time. The callback function need to
      * have one argument, which is the currently running task.
      */
-    Task(unsigned long periodUs, bool enabled = true);
+    Task(Schedulable * toRun, unsigned long periodUs, bool enabled = true);
 
     /**
      * Remove registration of a task in the timer manager.
@@ -100,7 +102,7 @@ protected:
     /**
      * The function that will be called when the period time was passed since the lastCallTime.
      */
-    virtual void run()=0;
+    virtual void run();
 
     volatile unsigned long getLastCallTimeMicros() const {
         return lastCallTimeMicros;
@@ -127,6 +129,8 @@ protected:
     }
 
 private:
+
+    Schedulable * toRun;
 
     /**
      * The timeslot in milliseconds the handler should be called. If the value is near 1 the handler will be called in every loop.

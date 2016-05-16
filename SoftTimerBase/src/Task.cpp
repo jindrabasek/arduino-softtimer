@@ -27,9 +27,11 @@
 #include <Arduino.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <Schedulable.h>
 #include <Task.h>
 
-Task::Task(unsigned long periodUs, bool enabled) :
+Task::Task(Schedulable * toRun, unsigned long periodUs, bool enabled) :
+        toRun(toRun),
         periodUs(periodUs),
         lastCallTimeMicros(0),
         nextTask(NULL),
@@ -78,4 +80,8 @@ bool Task::test() {
 
 Task::~Task() {
     remove();
+}
+
+void Task::run() {
+    toRun->run(this);
 }

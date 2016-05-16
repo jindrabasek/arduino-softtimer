@@ -10,9 +10,11 @@
 #include <stdbool.h>
 #include <Task.h>
 
-LongTask::LongTask(unsigned long periodHours, unsigned long periodUs,
+LongTask::LongTask(Schedulable * toRun, unsigned long periodHours,
+                   unsigned long periodUs,
                    bool enabled) :
-        Task(periodHours == 0 ? roundPeriodUs(periodUs) : ONE_HOUR_US, enabled),
+        Task(toRun, periodHours == 0 ? roundPeriodUs(periodUs) : ONE_HOUR_US,
+                enabled),
         inLastPeriod(periodHours == 0),
         periodHours(periodHours),
         endPeriodUs(roundPeriodUs(periodUs)),

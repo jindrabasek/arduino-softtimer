@@ -32,14 +32,13 @@
 #define STATE_STARTING 0
 #define STATE_ON_DELAY 1
 
-DelayRun::DelayRun(unsigned long delayMs, Task* followedBy) :
-        Task(delayMs),
+DelayRun::DelayRun(Task* followedBy) :
         followedBy(followedBy) {
 }
 
-void DelayRun::run() {
+void DelayRun::run(Task* task) {
     // -- Remove me from Timer Manager.
-    remove();
+    task->remove();
 
     SoftTimer.add(followedBy);
     followedBy->startAtEarliestOportunity();

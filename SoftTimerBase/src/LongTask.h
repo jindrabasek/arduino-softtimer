@@ -13,14 +13,15 @@
 class LongTask : public Task {
 public:
 
-    LongTask(unsigned long periodHours, unsigned long periodUs,
+    LongTask(Schedulable * toRun, unsigned long periodHours,
+             unsigned long periodUs,
              bool enabled = true);
 
     virtual void markJustCalled();
 
     virtual void setPeriodUs(unsigned long periodUs);
 
-    virtual void setPeriod(unsigned long periodHours, unsigned long periodUs);
+    void setPeriod(unsigned long periodHours, unsigned long periodUs);
 
 protected:
 

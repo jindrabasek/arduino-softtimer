@@ -35,7 +35,7 @@
 Debouncer::Debouncer(uint8_t pin, uint8_t pushMode, ButtonHandler * handler,
 bool pullUp) :
         PciListener(pin),
-        Task(DEFAULT_DEBOUNCE_DELAY_MILIS, false),
+        Task(NULL, DEFAULT_DEBOUNCE_DELAY_MILIS, false),
         onLevel(pushMode),
         pressStart(0),
         handler(handler) {
