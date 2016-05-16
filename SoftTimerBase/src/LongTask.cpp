@@ -10,20 +10,20 @@
 #include <stdbool.h>
 #include <Task.h>
 
-LongTask::LongTask(unsigned long periodHours, unsigned long periodUs,
+LongTask::LongTask(unsigned int periodHours, unsigned int periodUs,
                    bool enabled) :
         Task(periodHours == 0 ? roundPeriodUs(periodUs) : ONE_HOUR_US, enabled),
-        inLastPeriod(periodHours == 0),
         periodHours(periodHours),
         endPeriodUs(roundPeriodUs(periodUs)),
         hoursPassed(0) {
+    setInLastPeriod(periodHours == 0);
 }
 
 void LongTask::markJustCalled() {
     Task::markJustCalled();
     hoursPassed = 0;
     Task::setPeriodUs(periodHours == 0 ? endPeriodUs : ONE_HOUR_US);
-    inLastPeriod = periodHours == 0;
+    setInLastPeriod(periodHours == 0);
 }
 
 void LongTask::setPeriodUs(unsigned long periodUs) {
@@ -31,15 +31,15 @@ void LongTask::setPeriodUs(unsigned long periodUs) {
     unsigned long period = roundPeriodUs(periodUs);
     Task::setPeriodUs(period);
     endPeriodUs = period;
-    inLastPeriod = true;
+    setInLastPeriod(true);
 }
 
-void LongTask::setPeriod(unsigned long periodHours, unsigned long periodUs) {
+void LongTask::setPeriod(unsigned int periodHours, unsigned long periodUs) {
     this->periodHours = periodHours;
     unsigned long period = roundPeriodUs(periodUs);
     Task::setPeriodUs(periodHours == 0 ? period : ONE_HOUR_US);
     endPeriodUs = period;
-    inLastPeriod = periodHours == 0;
+    setInLastPeriod(periodHours == 0);
 }
 
 bool LongTask::test() {
@@ -57,10 +57,10 @@ bool LongTask::test() {
                 {
             setLastCallTimeMicros(now);
             if (periodHours == 0 || hoursPassed >= periodHours) {
-                if (inLastPeriod) {
+                if (isInLastPeriod()) {
                     return true;
                 } else {
-                    inLastPeriod = true;
+                    setInLastPeriod(true);
                     if (endPeriodUs > 0) {
                         Task::setPeriodUs(
                                 periodHours == 0 ? endPeriodUs : ONE_HOUR_US);

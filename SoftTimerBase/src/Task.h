@@ -86,7 +86,7 @@ public:
 
 protected:
 
-    virtual void loop(){
+    virtual void loop() {
         setStartAtEarliest(false);
         markJustCalled();
         run();
@@ -126,6 +126,13 @@ protected:
         bitWrite(flags, RUNNING_FLAG_BIT, running);
     }
 
+    volatile uint8_t flags;
+
+    static const uint8_t ENABLED_FLAG_BIT = 0;
+    static const uint8_t START_AT_EARLIEST_FLAG_BIT = ENABLED_FLAG_BIT + 1;
+    static const uint8_t RUNNING_FLAG_BIT = START_AT_EARLIEST_FLAG_BIT + 1;
+    static const uint8_t next_free_flag_bit = RUNNING_FLAG_BIT + 1;
+
 private:
 
     /**
@@ -149,13 +156,6 @@ private:
     Task* volatile * volatile prevToThisTask;
 
     SingleThreadPool * volatile threadPool;
-
-    volatile uint8_t flags;
-
-    static const uint8_t ENABLED_FLAG_BIT = 0;
-    static const uint8_t START_AT_EARLIEST_FLAG_BIT = ENABLED_FLAG_BIT + 1;
-    static const uint8_t RUNNING_FLAG_BIT = START_AT_EARLIEST_FLAG_BIT + 1;
-
 };
 
 #pragma GCC diagnostic pop

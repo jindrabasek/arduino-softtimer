@@ -13,29 +13,39 @@
 class LongTask : public Task {
 public:
 
-    LongTask(unsigned long periodHours, unsigned long periodUs,
+    LongTask(unsigned int periodHours, unsigned int periodUs,
              bool enabled = true);
 
     virtual void markJustCalled();
 
     virtual void setPeriodUs(unsigned long periodUs);
 
-    virtual void setPeriod(unsigned long periodHours, unsigned long periodUs);
+    virtual void setPeriod(unsigned int periodHours, unsigned long periodUs);
 
 protected:
 
     virtual bool test();
 
+    static const uint8_t IN_LAST_PERIOD_FLAG_BIT = Task::next_free_flag_bit;
+    static const uint8_t next_free_flag_bit = IN_LAST_PERIOD_FLAG_BIT + 1;
+
 private:
+
+    bool isInLastPeriod() const {
+            return bitRead(flags, IN_LAST_PERIOD_FLAG_BIT);
+    }
+
+    void setInLastPeriod(bool inLastPeriod) {
+        bitWrite(flags, IN_LAST_PERIOD_FLAG_BIT, inLastPeriod);
+    }
+
     static unsigned long roundPeriodUs(unsigned long periodUs);
 
     static const unsigned long ONE_HOUR_US = 3600000000;
 
-    bool inLastPeriod;
-
-    unsigned long periodHours;
+    unsigned int periodHours;
     unsigned long endPeriodUs;
-    volatile unsigned long hoursPassed;
+    volatile unsigned int hoursPassed;
 
 };
 
