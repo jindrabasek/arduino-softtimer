@@ -91,7 +91,7 @@ protected:
         markJustCalled();
         run();
         setRunning(false);
-        Scheduler.disable();
+        Scheduler::disable();
         threadPool->releaseThread();
     }
 
