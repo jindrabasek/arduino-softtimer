@@ -35,7 +35,9 @@ Task::Task(unsigned long periodUs, bool enabled) :
         nextTask(NULL),
         prevToThisTask(
         NULL),
+#ifdef USE_CONCURENCY
         threadPool(NULL),
+#endif
         flags(0) {
     setEnabled(enabled);
 }

@@ -28,11 +28,16 @@
 #define TASK_H
 
 #include <Arduino.h>
-#include <Runnable.h>
 #include <stdbool.h>
 #include <stdint.h>
+
+#include <defines.h>
+
+#ifdef USE_CONCURENCY
+#include <Runnable.h>
 #include <Scheduler.h>
 #include <SingleThreadPool.h>
+#endif
 
 // Do not define virtual destructor on purpose - class
 // and its children is not expected to need destructors,
@@ -43,7 +48,11 @@
 /**
  * Task is a job that should be called repeatedly,
  */
-class Task : public Runnable {
+class Task
+#ifdef USE_CONCURENCY
+       : public Runnable
+#endif
+{
 public:
     ~Task();
 
@@ -78,14 +87,17 @@ public:
         return periodUs;
     }
 
+#ifdef USE_CONCURENCY
     void setThreadPool(SingleThreadPool* threadPool) {
         this->threadPool = threadPool;
     }
+#endif
 
     friend class SoftTimerT;
 
 protected:
 
+#ifdef USE_CONCURENCY
     virtual void loop() {
         setStartAtEarliest(false);
         markJustCalled();
@@ -94,6 +106,7 @@ protected:
         Scheduler::disable();
         threadPool->releaseThread();
     }
+#endif
 
     virtual bool test();
 
@@ -155,7 +168,9 @@ private:
      */
     Task* volatile * volatile prevToThisTask;
 
+#ifdef USE_CONCURENCY
     SingleThreadPool * volatile threadPool;
+#endif
 };
 
 #pragma GCC diagnostic pop

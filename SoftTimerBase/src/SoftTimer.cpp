@@ -28,10 +28,16 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <SingleThreadPool.h>
 #include <SoftTimer.h>
 #include <Task.h>
+
+#include <defines.h>
+
+#ifdef USE_CONCURENCY
+#include <SingleThreadPool.h>
 #include <Thread.h>
+#endif
+
 // Jindra: do it manually
 /*void loop() {
  SoftTimer.run();
@@ -77,6 +83,7 @@ void SoftTimerT::run(void (*loggingCallback)(Task * executedTask)) {
     while (task != NULL) {
         if (task->isEnabled() && !task->isRunning()) {
             if (task->test()) {
+#ifdef USE_CONCURENCY
                 if (task->threadPool != NULL) {
                     Thread * thread =
                             task->threadPool->aquireThreadNonBlocking();
@@ -93,6 +100,7 @@ void SoftTimerT::run(void (*loggingCallback)(Task * executedTask)) {
                         thread->enable();
                     }
                 } else {
+#endif
                     if (loggingCallback != NULL) {
                         loggingCallback(task);
                     }
@@ -100,9 +108,12 @@ void SoftTimerT::run(void (*loggingCallback)(Task * executedTask)) {
                     task->markJustCalled();
                     task->run();
                     task->setRunning(false);
+#ifdef USE_CONCURENCY
                 }
+#endif
             }
         }
+
         task = task->nextTask;
         yield();
     }
