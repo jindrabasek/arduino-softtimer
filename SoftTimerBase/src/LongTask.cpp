@@ -11,8 +11,8 @@
 #include <Task.h>
 
 LongTask::LongTask(unsigned int periodHours, unsigned int periodUs,
-                   bool enabled) :
-        Task(periodHours == 0 ? roundPeriodUs(periodUs) : ONE_HOUR_US, enabled),
+                   bool enabled, uint8_t taskId) :
+        Task(periodHours == 0 ? roundPeriodUs(periodUs) : ONE_HOUR_US, enabled, taskId),
         periodHours(periodHours),
         endPeriodUs(roundPeriodUs(periodUs)),
         hoursPassed(0) {

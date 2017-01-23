@@ -29,7 +29,8 @@
 #include <stddef.h>
 #include <Task.h>
 
-Task::Task(unsigned long periodUs, bool enabled) :
+Task::Task(unsigned long periodUs, bool enabled, uint8_t taskId) :
+        taskId(taskId),
         periodUs(periodUs),
         lastCallTimeMicros(0),
         nextTask(NULL),
@@ -41,6 +42,7 @@ Task::Task(unsigned long periodUs, bool enabled) :
         flags(0) {
     setEnabled(enabled);
 }
+
 
 void Task::startAtEarliestOportunity() {
     setStartAtEarliest(true);

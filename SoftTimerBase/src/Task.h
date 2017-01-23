@@ -62,7 +62,7 @@ public:
      *  callback - Is a static function reference, the function will be called each time. The callback function need to
      * have one argument, which is the currently running task.
      */
-    Task(unsigned long periodUs, bool enabled = true);
+    Task(unsigned long periodUs, bool enabled = true, uint8_t taskId = 255);
 
     /**
      * Remove registration of a task in the timer manager.
@@ -92,6 +92,10 @@ public:
         this->threadPool = threadPool;
     }
 #endif
+
+    uint8_t getTaskId() const {
+        return taskId;
+    }
 
     friend class SoftTimerT;
 
@@ -167,6 +171,8 @@ private:
      * This member is for internal use only. Do not change!
      */
     Task* volatile * volatile prevToThisTask;
+
+    uint8_t taskId;
 
 #ifdef USE_CONCURENCY
     SingleThreadPool * volatile threadPool;
