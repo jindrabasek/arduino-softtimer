@@ -14,7 +14,7 @@ class LongTask : public Task {
 public:
 
     LongTask(unsigned int periodHours, unsigned int periodUs,
-             bool enabled = true, uint8_t taskId = 255);
+             bool enabled = true, uint8_t taskId = 201);
 
     virtual void markJustCalled();
 

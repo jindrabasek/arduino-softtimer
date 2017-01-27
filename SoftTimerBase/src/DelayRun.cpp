@@ -33,7 +33,7 @@
 #define STATE_ON_DELAY 1
 
 DelayRun::DelayRun(unsigned long delayMs, Task* followedBy) :
-        Task(delayMs),
+        Task(delayMs, true, 100 + followedBy->getTaskId()),
         followedBy(followedBy) {
 }
 

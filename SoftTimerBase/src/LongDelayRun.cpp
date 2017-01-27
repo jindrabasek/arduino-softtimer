@@ -11,7 +11,7 @@
 
 LongDelayRun::LongDelayRun(unsigned long delayHours, unsigned long delayMs,
                            Task* followedBy) :
-        LongTask(delayHours, delayMs),
+        LongTask(delayHours, delayMs, true, 150 + followedBy->getTaskId()),
         followedBy(followedBy) {
 }
 
